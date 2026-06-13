@@ -67,7 +67,10 @@
               "buildTarget": "ledger:build:development"
             }
           },
-          "defaultConfiguration": "development"
+          "defaultConfiguration": "development",
+          "options": {
+            "allowedHosts": [".amazonaws.com"]
+          }
         },
         "test": {
           "builder": "@angular/build:unit-test"
