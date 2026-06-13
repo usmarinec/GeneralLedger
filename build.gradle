@@ -6,11 +6,13 @@ buildscript {
     
     dependencies {
         classpath 'com.puppycrawl.tools:checkstyle:13.5.0'
+        classpath 'com.diffplug.spotless:spotless-plugin-gradle:8.6.0'
     }
 }
 
 subprojects {
     apply plugin: 'checkstyle'
+    apply plugin: 'com.diffplug.spotless'
     
     checkstyle{
         configFile = file("${rootDir}/config/checkstyle/checkstyle.xml")
