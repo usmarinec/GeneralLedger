@@ -6,3 +6,5 @@
  */
 
 rootProject.name = 'GeneralLedger'
+
+include 'ledger-backend'
