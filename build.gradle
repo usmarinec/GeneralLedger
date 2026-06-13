@@ -3,4 +3,23 @@ buildscript {
         mavenCentral()
         google()
     }
+    
+    dependencies {
+        classpath 'com.puppycrawl.tools:checkstyle:13.5.0'
+    }
+}
+
+subprojects {
+    apply plugin: 'checkstyle'
+    
+    checkstyle{
+        configFile = file("${rootDir}/config/checkstyle/checkstyle.xml")
+        toolVersion = "13.5.0"
+    }
+    task checkstyle(type: Checkstyle) {
+        dependsOn 'check'
+        source 'src'
+        include '**/*.java'
+        // Additional Checkstyle configuration can be added here
+    }
 }
