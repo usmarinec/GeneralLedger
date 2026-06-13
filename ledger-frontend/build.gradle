@@ -1,0 +1,43 @@
+import com.github.gradle.node.npm.task.NpmTask
+
+plugins {
+    id 'base'
+    id 'com.github.node-gradle.node' version '7.1.0'
+}
+
+node {
+    download = true
+
+    // Angular v22 currently requires Node ^22.22.3, ^24.15.0, or ^26.0.0.
+    // Pinning Node here makes the Gradle build independent of your system Node.
+    version = '24.16.0'
+
+    npmInstallCommand = 'ci'
+}
+
+tasks.register('npmBuild', NpmTask) {
+    dependsOn tasks.named('npmInstall')
+    args = ['run', 'build']
+
+    inputs.files('package.json', 'package-lock.json', 'angular.json')
+    inputs.dir('src')
+    outputs.dir('dist')
+}
+
+tasks.register('npmStart', NpmTask) {
+    dependsOn tasks.named('npmInstall')
+    args = ['run', 'start']
+}
+
+tasks.register('npmTest', NpmTask) {
+    dependsOn tasks.named('npmInstall')
+    args = ['run', 'test', '--', '--watch=false']
+}
+
+tasks.named('build') {
+    dependsOn tasks.named('npmBuild')
+}
+
+tasks.named('clean') {
+    delete 'dist'
+}
