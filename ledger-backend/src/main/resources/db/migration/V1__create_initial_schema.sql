@@ -16,3 +16,37 @@ CREATE TABLE fiscal_years (
     CONSTRAINT chk_fiscal_year_dates CHECK (start_date <= end_date)
 );
 
+CREATE TABLE accounts (
+    id UUID PRIMARY KEY,
+    company_id UUID NOT NULL REFERENCES companies(id),
+
+    code VARCHAR(50) NOT NULL,
+    name VARCHAR(255) NOT NULL,
+
+    account_type VARCHAR(50) NOT NULL,
+    normal_balance VARCHAR(10) NOT NULL,
+    classification VARCHAR(50) NOT NULL DEFAULT 'NONE',
+
+    active BOOLEAN NOT NULL DEFAULT TRUE,
+
+    CONSTRAINT uq_accounts_company_code UNIQUE (company_id, code),
+
+    CONSTRAINT chk_accounts_account_type CHECK (
+        account_type IN (
+            'ASSET',
+            'LIABILITY',
+            'EQUITY',
+            'REVENUE',
+            'EXPENSE'
+        )
+    ),
+
+    CONSTRAINT chk_accounts_normal_balance CHECK (
+        normal_balance IN ('DEBIT', 'CREDIT')
+    ),
+
+    CONSTRAINT chk_accounts_classification CHECK (
+        classification IN ('CURRENT', 'NON_CURRENT', 'NONE')
+    )
+);
+
