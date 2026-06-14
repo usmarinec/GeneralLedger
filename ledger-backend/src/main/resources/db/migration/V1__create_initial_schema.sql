@@ -73,3 +73,26 @@ CREATE TABLE journal_entries (
     )
 );
 
+CREATE TABLE journal_entry_lines (
+    id UUID PRIMARY KEY,
+    journal_entry_id UUID NOT NULL REFERENCES journal_entries(id) ON DELETE CASCADE,
+    account_id UUID NOT NULL REFERENCES accounts(id),
+
+    line_number INTEGER NOT NULL,
+    description TEXT,
+
+    debit_amount NUMERIC(19, 4) NOT NULL DEFAULT 0,
+    credit_amount NUMERIC(19, 4) NOT NULL DEFAULT 0,
+
+    CONSTRAINT uq_journal_line_number UNIQUE (journal_entry_id, line_number),
+
+    CONSTRAINT chk_journal_line_amounts_nonnegative CHECK (
+        debit_amount >= 0 AND credit_amount >= 0
+    ),
+
+    CONSTRAINT chk_journal_line_debit_or_credit CHECK (
+        (debit_amount > 0 AND credit_amount = 0)
+        OR
+        (credit_amount > 0 AND debit_amount = 0)
+    )
+);
