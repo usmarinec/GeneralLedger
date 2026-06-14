@@ -50,3 +50,26 @@ CREATE TABLE accounts (
     )
 );
 
+CREATE TABLE journal_entries (
+    id UUID PRIMARY KEY,
+    company_id UUID NOT NULL REFERENCES companies(id),
+    fiscal_year_id UUID NOT NULL REFERENCES fiscal_years(id),
+
+    entry_date DATE NOT NULL,
+    entry_type VARCHAR(50) NOT NULL,
+    status VARCHAR(50) NOT NULL,
+
+    memo TEXT,
+
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    posted_at TIMESTAMP,
+
+    CONSTRAINT chk_journal_entry_type CHECK (
+        entry_type IN ('STANDARD', 'ADJUSTING', 'CLOSING')
+    ),
+
+    CONSTRAINT chk_journal_entry_status CHECK (
+        status IN ('DRAFT', 'POSTED', 'VOIDED')
+    )
+);
+
