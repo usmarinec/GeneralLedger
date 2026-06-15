@@ -17,7 +17,9 @@ jobs:
   spotless:
     name: spotless
     runs-on: ubuntu-latest
-    environment: development
+    
+    permissions: 
+      contents: read
     
     steps:
       - name: Check out pull request branch
@@ -25,6 +27,7 @@ jobs:
         with: 
           repository: ${{ github.event.pull_request.head.repo.full_name }}
           ref: ${{ github.event.pull_request.head.ref }}
+          persist-credentials: false
       
       - name: Set up project
         uses: ./.github/actions/setup-gradle-project
@@ -38,15 +41,24 @@ jobs:
         if: steps.spotless.outcome == 'failure' && github.event.pull_request.head.repo.full_name == github.repository
         run: ./gradlew spotlessApply
         
-      - name: Commit Spotless formatting changes
-        if: steps.spotless.outcome == 'failure' && github.event.pull_request.head.repo.full_name == github.repository
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+      - name: Commit and push Spotless formatting changes
+      if: steps.spotless.outcome == 'failure' && github.event.pull_request.head.repo.full_name == github.repository
+      env:
+        CI_AUTOFIX_PAT_GL: ${{ secrets.CI_AUTOFIX_PAT_GL }}
+      run: |
+        if [ -z "$CI_AUTOFIX_PAT_GL" ]; then
+          echo "CI_AUTOFIX_PAT_GL is empty or unavailable."
+          exit 1
+        fi
 
-          git add .
-          git diff --cached --quiet || git commit -m "Apply Spotless formatting"
-          git push "https://x-access-token:${CI_AUTOFIX_PAT_GL}@github.com/${{ github.repository }}.git" HEAD:${{ github.event.pull_request.head.ref }}
+        git config user.name "Lon Nolan"
+        git config user.email "usmarinec@gmail.com"
+
+        git add .
+        git diff --cached --quiet || git commit -m "Apply Spotless formatting"
+
+        git remote set-url origin "https://x-access-token:${CI_AUTOFIX_PAT_GL}@github.com/${{ github.repository }}.git"
+        git push origin HEAD:${{ github.event.pull_request.head.ref }}
 
       - name: Fail because Spotless formatting was applied
         if: steps.spotless.outcome == 'failure'
@@ -57,7 +69,6 @@ jobs:
   checkstyle:
     name: Checkstyle test
     runs-on: ubuntu-latest
-    environment: development
     needs: spotless
     
     steps:
@@ -76,7 +87,6 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
-    environment: development
     needs: checkstyle
 
     services:
@@ -117,7 +127,6 @@ jobs:
   backendTests:
     name: Backend unit tests
     runs-on: ubuntu-latest
-    environment: development
     needs: build
     
     steps:
