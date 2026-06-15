@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name = "entities")
-public class Entities extends LedgerDocument {
+public class AccountingEntity extends LedgerDocument {
   @Column(nullable = false, length = 255)
   private String name;
 

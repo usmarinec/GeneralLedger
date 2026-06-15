@@ -1,7 +1,7 @@
 package com.usmarinec.ledger.domain.fiscal;
 
 import com.usmarinec.ledger.domain.LedgerDocument;
-import com.usmarinec.ledger.domain.entities.Entities;
+import com.usmarinec.ledger.domain.entities.AccountingEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -24,7 +24,7 @@ import lombok.Data;
 public class FiscalYear extends LedgerDocument {
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @JoinColumn(name = "entity_id", nullable = false)
-  private Entities entity;
+  private AccountingEntity entity;
 
   @Column(nullable = false)
   private Integer year;

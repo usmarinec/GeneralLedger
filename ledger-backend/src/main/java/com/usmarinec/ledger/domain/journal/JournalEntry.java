@@ -1,7 +1,7 @@
 package com.usmarinec.ledger.domain.journal;
 
 import com.usmarinec.ledger.domain.LedgerDocument;
-import com.usmarinec.ledger.domain.entities.Entities;
+import com.usmarinec.ledger.domain.entities.AccountingEntity;
 import com.usmarinec.ledger.domain.fiscal.FiscalYear;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -26,7 +26,7 @@ import lombok.Data;
 public class JournalEntry extends LedgerDocument {
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @JoinColumn(name = "entity_id", nullable = false)
-  private Entities entity;
+  private AccountingEntity entity;
 
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @JoinColumn(name = "fiscal_year_id", nullable = false)
