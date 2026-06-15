@@ -18,7 +18,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import lombok.Data;
 
 @Data
@@ -56,11 +55,10 @@ public class JournalEntry extends LedgerDocument {
   @OneToMany(mappedBy = "journalEntry", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<JournalEntryLine> lines = new ArrayList<>();
 
+  @Override
   @PrePersist
-  void prePersist() {
-    if (this.id == null) {
-      this.id = UUID.randomUUID();
-    }
+  protected void prePersist() {
+    super.prePersist();
 
     if (this.createdAt == null) {
       this.createdAt = LocalDateTime.now();

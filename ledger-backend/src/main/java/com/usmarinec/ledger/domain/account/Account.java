@@ -9,10 +9,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
-import java.util.UUID;
 import lombok.Data;
 
 @Data
@@ -49,11 +47,4 @@ public class Account extends LedgerDocument {
 
   @Column(nullable = false)
   private boolean active = true;
-
-  @PrePersist
-  void prePersist() {
-    if (this.id == null) {
-      this.id = UUID.randomUUID();
-    }
-  }
 }

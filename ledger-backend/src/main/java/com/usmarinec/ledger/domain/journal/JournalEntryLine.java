@@ -11,7 +11,6 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import java.math.BigDecimal;
-import java.util.UUID;
 import lombok.Data;
 
 @Data
@@ -44,11 +43,10 @@ public class JournalEntryLine extends LedgerDocument {
   @Column(name = "credit_amount", nullable = false, precision = 19, scale = 4)
   private BigDecimal creditAmount = BigDecimal.ZERO;
 
+  @Override
   @PrePersist
-  void prePersist() {
-    if (this.id == null) {
-      this.id = UUID.randomUUID();
-    }
+  protected void prePersist() {
+    super.prePersist();
 
     if (this.debitAmount == null) {
       debitAmount = BigDecimal.ZERO;
