@@ -25,7 +25,7 @@ import lombok.Data;
 @Table(name = "journal_entries")
 public class JournalEntry extends LedgerDocument {
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
-  @JoinColumn(name = "entity_id", nullable = false)
+  @JoinColumn(name = "accounting_entity_id", nullable = false)
   private AccountingEntity entity;
 
   @ManyToOne(fetch = FetchType.LAZY, optional = false)

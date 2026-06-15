@@ -1,4 +1,4 @@
-CREATE TABLE entities (
+CREATE TABLE accounting_entities (
     id UUID PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -6,19 +6,19 @@ CREATE TABLE entities (
 
 CREATE TABLE fiscal_years (
     id UUID PRIMARY KEY,
-    entity_id UUID NOT NULL REFERENCES entities(id),
+    accounting_entity_id UUID NOT NULL REFERENCES accounting_entities(id),
     year INTEGER NOT NULL,
     start_date DATE NOT NULL,
     end_date DATE NOT NULL,
     closed BOOLEAN NOT NULL DEFAULT FALSE,
 
-    CONSTRAINT uq_fiscal_year_entity_year UNIQUE (entity_id, year),
+    CONSTRAINT uq_fiscal_year_accounting_entity_year UNIQUE (accounting_entity_id, year),
     CONSTRAINT chk_fiscal_year_dates CHECK (start_date <= end_date)
 );
 
 CREATE TABLE accounts (
     id UUID PRIMARY KEY,
-    entity_id UUID NOT NULL REFERENCES entities(id),
+    accounting_entity_id UUID NOT NULL REFERENCES accounting_entities(id),
 
     code VARCHAR(50) NOT NULL,
     name VARCHAR(255) NOT NULL,
@@ -29,7 +29,7 @@ CREATE TABLE accounts (
 
     active BOOLEAN NOT NULL DEFAULT TRUE,
 
-    CONSTRAINT uq_accounts_entity_code UNIQUE (entity_id, code),
+    CONSTRAINT uq_accounts_accounting_entity_code UNIQUE (accounting_entity_id, code),
 
     CONSTRAINT chk_accounts_account_type CHECK (
         account_type IN (
@@ -52,7 +52,7 @@ CREATE TABLE accounts (
 
 CREATE TABLE journal_entries (
     id UUID PRIMARY KEY,
-    entity_id UUID NOT NULL REFERENCES entities(id),
+    accounting_entity_id UUID NOT NULL REFERENCES accounting_entities(id),
     fiscal_year_id UUID NOT NULL REFERENCES fiscal_years(id),
 
     entry_date DATE NOT NULL,

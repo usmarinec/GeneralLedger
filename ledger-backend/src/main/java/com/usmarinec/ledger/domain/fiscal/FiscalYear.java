@@ -18,12 +18,12 @@ import lombok.Data;
     name = "fiscal_years",
     uniqueConstraints = {
       @UniqueConstraint(
-          name = "uq_fiscal_year_entity_year",
-          columnNames = {"entity_id", "year"})
+          name = "uq_fiscal_year_accountiing_entity_year",
+          columnNames = {"accounting_entity_id", "year"})
     })
 public class FiscalYear extends LedgerDocument {
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
-  @JoinColumn(name = "entity_id", nullable = false)
+  @JoinColumn(name = "accounting_entity_id", nullable = false)
   private AccountingEntity entity;
 
   @Column(nullable = false)

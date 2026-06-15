@@ -19,12 +19,12 @@ import lombok.Data;
     name = "accounts",
     uniqueConstraints = {
       @UniqueConstraint(
-          name = "uq_accounts_entity_code",
-          columnNames = {"entity_id", "code"})
+          name = "uq_accounts_accounting_entity_code",
+          columnNames = {"accounting_entity_id", "code"})
     })
 public class Account extends LedgerDocument {
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
-  @JoinColumn(name = "entity_id", nullable = false)
+  @JoinColumn(name = "accounting_entity_id", nullable = false)
   private AccountingEntity entity;
 
   @Column(nullable = false, length = 50)

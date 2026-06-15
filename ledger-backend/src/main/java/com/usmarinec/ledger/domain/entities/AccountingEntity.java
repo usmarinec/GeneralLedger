@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name = "entities")
+@Table(name = "accounting_entities")
 public class AccountingEntity extends LedgerDocument {
   @Column(nullable = false, length = 255)
   private String name;
