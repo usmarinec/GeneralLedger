@@ -22,7 +22,9 @@ jobs:
       - name: Check out pull request branch
         uses: actions/checkout@v6
         with: 
-          ref: ${{ github.head_ref }}
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.CI_AUTOFIX_PTA_GL }}
       
       - name: Set up project
         uses: ./.github/actions/setup-gradle-project
@@ -44,7 +46,7 @@ jobs:
 
           git add .
           git diff --cached --quiet || git commit -m "Apply Spotless formatting"
-          git push
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
 
       - name: Fail because Spotless formatting was applied
         if: steps.spotless.outcome == 'failure'
