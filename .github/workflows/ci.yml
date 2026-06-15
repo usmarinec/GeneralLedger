@@ -24,7 +24,6 @@ jobs:
         with: 
           repository: ${{ github.event.pull_request.head.repo.full_name }}
           ref: ${{ github.event.pull_request.head.ref }}
-          token: ${{ secrets.CI_AUTOFIX_PTA_GL }}
       
       - name: Set up project
         uses: ./.github/actions/setup-gradle-project
@@ -46,7 +45,7 @@ jobs:
 
           git add .
           git diff --cached --quiet || git commit -m "Apply Spotless formatting"
-          git push origin HEAD:${{ github.event.pull_request.head.ref }}
+          git push "https://x-access-token:${CI_AUTOFIX_PAT_GL}@github.com/${{ github.repository }}.git" HEAD:${{ github.event.pull_request.head.ref }}
 
       - name: Fail because Spotless formatting was applied
         if: steps.spotless.outcome == 'failure'
