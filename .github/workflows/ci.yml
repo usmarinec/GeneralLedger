@@ -42,23 +42,23 @@ jobs:
         run: ./gradlew spotlessApply
         
       - name: Commit and push Spotless formatting changes
-      if: steps.spotless.outcome == 'failure' && github.event.pull_request.head.repo.full_name == github.repository
-      env:
-        CI_AUTOFIX_PAT_GL: ${{ secrets.CI_AUTOFIX_PAT_GL }}
-      run: |
-        if [ -z "$CI_AUTOFIX_PAT_GL" ]; then
-          echo "CI_AUTOFIX_PAT_GL is empty or unavailable."
-          exit 1
-        fi
-
-        git config user.name "Lon Nolan"
-        git config user.email "usmarinec@gmail.com"
-
-        git add .
-        git diff --cached --quiet || git commit -m "Apply Spotless formatting"
-
-        git remote set-url origin "https://x-access-token:${CI_AUTOFIX_PAT_GL}@github.com/${{ github.repository }}.git"
-        git push origin HEAD:${{ github.event.pull_request.head.ref }}
+        if: steps.spotless.outcome == 'failure' && github.event.pull_request.head.repo.full_name == github.repository
+        env:
+          CI_AUTOFIX_PAT_GL: ${{ secrets.CI_AUTOFIX_PAT_GL }}
+        run: |
+          if [ -z "$CI_AUTOFIX_PAT_GL" ]; then
+            echo "CI_AUTOFIX_PAT_GL is empty or unavailable."
+            exit 1
+          fi
+  
+          git config user.name "Lon Nolan"
+          git config user.email "usmarinec@gmail.com"
+  
+          git add .
+          git diff --cached --quiet || git commit -m "Apply Spotless formatting"
+  
+          git remote set-url origin "https://x-access-token:${CI_AUTOFIX_PAT_GL}@github.com/${{ github.repository }}.git"
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
 
       - name: Fail because Spotless formatting was applied
         if: steps.spotless.outcome == 'failure'
