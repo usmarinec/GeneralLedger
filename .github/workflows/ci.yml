@@ -1,0 +1,140 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+    types:
+      - opened
+      - synchronize
+      - reopened
+
+permissions:
+  contents: write
+
+jobs:
+  spotless:
+    name: spotless
+    runs-on: ubuntu-latest
+    
+    permissions: 
+      contents: read
+    
+    steps:
+      - name: Check out pull request branch
+        uses: actions/checkout@v6
+        with: 
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.ref }}
+          persist-credentials: false
+      
+      - name: Set up project
+        uses: ./.github/actions/setup-gradle-project
+      
+      - name: Spotless check
+        id: spotless
+        continue-on-error: true
+        run: ./gradlew spotlessCheck
+        
+      - name: Apply spotless formatting
+        if: steps.spotless.outcome == 'failure' && github.event.pull_request.head.repo.full_name == github.repository
+        run: ./gradlew spotlessApply
+        
+      - name: Commit and push Spotless formatting changes
+        if: steps.spotless.outcome == 'failure' && github.event.pull_request.head.repo.full_name == github.repository
+        env:
+          CI_AUTOFIX_PAT_GL: ${{ secrets.CI_AUTOFIX_PAT_GL }}
+        run: |
+          if [ -z "$CI_AUTOFIX_PAT_GL" ]; then
+            echo "CI_AUTOFIX_PAT_GL is empty or unavailable."
+            exit 1
+          fi
+  
+          git config user.name "Lon Nolan"
+          git config user.email "usmarinec@gmail.com"
+  
+          git add .
+          git diff --cached --quiet || git commit -m "Apply Spotless formatting"
+  
+          git remote set-url origin "https://x-access-token:${CI_AUTOFIX_PAT_GL}@github.com/${{ github.repository }}.git"
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
+
+      - name: Fail because Spotless formatting was applied
+        if: steps.spotless.outcome == 'failure'
+        run: |
+          echo "Spotless formatting failed. spotlessApply was run and changes were pushed."
+          exit 1
+  
+  checkstyle:
+    name: Checkstyle test
+    runs-on: ubuntu-latest
+    needs: spotless
+    
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+        
+      - name: Set up project
+        uses: ./.github/actions/setup-gradle-project
+        
+      - name: CheckstyleMain
+        run: ./gradlew checkstyleMain
+        
+      - name: CheckstyleTest
+        run: ./gradlew checkstyleTest
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    needs: checkstyle
+
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up project
+        uses: ./.github/actions/setup-gradle-project
+
+      - name: Build
+        run: ./gradlew clean assemble
+
+
+  backendTests:
+    name: Backend unit tests
+    runs-on: ubuntu-latest
+    needs: build
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_DB: ledger
+          POSTGRES_USER: root
+          POSTGRES_PASSWORD: example
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U ledger_user -d ledger_test"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    env:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/ledger
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: example
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+
+      SPRING_FLYWAY_ENABLED: true
+      SPRING_JPA_HIBERNATE_DDL_AUTO: validate
+    
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up project
+        uses: ./.github/actions/setup-gradle-project
+      
+      - name: domain tests
+        run: ./gradlew :ledger-backend:test
