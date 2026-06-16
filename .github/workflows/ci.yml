@@ -136,5 +136,8 @@ jobs:
       - name: Set up project
         uses: ./.github/actions/setup-gradle-project
       
+      - name: context loads
+        run: ./gradlew :ledger-backend:test --tests com.usmarinec.ledger.LedgerApplicationTests
+      
       - name: domain tests
         run: ./gradlew :ledger-backend:test --tests com.usmarinec.ledger.domain.*
