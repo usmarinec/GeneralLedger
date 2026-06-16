@@ -89,6 +89,22 @@ jobs:
     runs-on: ubuntu-latest
     needs: checkstyle
 
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up project
+        uses: ./.github/actions/setup-gradle-project
+
+      - name: Build
+        run: ./gradlew clean assemble
+
+
+  backendTests:
+    name: Backend unit tests
+    runs-on: ubuntu-latest
+    needs: build
     services:
       postgres:
         image: postgres:18
@@ -112,22 +128,6 @@ jobs:
 
       SPRING_FLYWAY_ENABLED: true
       SPRING_JPA_HIBERNATE_DDL_AUTO: validate
-
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v6
-
-      - name: Set up project
-        uses: ./.github/actions/setup-gradle-project
-
-      - name: Build
-        run: ./gradlew clean assemble
-
-
-  backendTests:
-    name: Backend unit tests
-    runs-on: ubuntu-latest
-    needs: build
     
     steps:
       - name: Check out repository
