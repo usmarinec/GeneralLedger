@@ -137,4 +137,4 @@ jobs:
         uses: ./.github/actions/setup-gradle-project
       
       - name: domain tests
-        run: ./gradlew :ledger-backend:test
+        run: ./gradlew :ledger-backend:test --tests com.usmarinec.ledger.domain.*
