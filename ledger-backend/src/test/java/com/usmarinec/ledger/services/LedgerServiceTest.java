@@ -1,8 +1,8 @@
 package com.usmarinec.ledger.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -10,10 +10,10 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.usmarinec.ledger.domain.LedgerDocument;
-import com.usmarinec.ledger.repositories.LedgerRepository;
-import com.usmarinec.ledger.dto.Response;
 import com.usmarinec.ledger.dto.CreateRequest;
+import com.usmarinec.ledger.dto.Response;
 import com.usmarinec.ledger.dto.UpdateRequest;
+import com.usmarinec.ledger.repositories.LedgerRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -55,47 +55,45 @@ class LedgerServiceTest {
 
     verify(repository).save(any(TestDocument.class));
   }
-  
+
   @Test
-void createList_savesAllEntitiesAndReturnsAllResponses() {
-  List<TestCreateRequest> requests =
-      List.of(
-          new TestCreateRequest("First"),
-          new TestCreateRequest("Second"));
+  void createList_savesAllEntitiesAndReturnsAllResponses() {
+    List<TestCreateRequest> requests =
+        List.of(new TestCreateRequest("First"), new TestCreateRequest("Second"));
 
-  TestDocument savedFirst = new TestDocument();
-  savedFirst.setId(UUID.randomUUID());
-  savedFirst.setName("First");
+    TestDocument savedFirst = new TestDocument();
+    savedFirst.setId(UUID.randomUUID());
+    savedFirst.setName("First");
 
-  TestDocument savedSecond = new TestDocument();
-  savedSecond.setId(UUID.randomUUID());
-  savedSecond.setName("Second");
+    TestDocument savedSecond = new TestDocument();
+    savedSecond.setId(UUID.randomUUID());
+    savedSecond.setName("Second");
 
-  when(repository.saveAll(any())).thenReturn(List.of(savedFirst, savedSecond));
+    when(repository.saveAll(any())).thenReturn(List.of(savedFirst, savedSecond));
 
-  List<TestResponse> responses = service.createList(requests);
+    List<TestResponse> responses = service.createList(requests);
 
-  assertEquals(2, responses.size());
+    assertEquals(2, responses.size());
 
-  assertEquals(savedFirst.getId(), responses.get(0).id());
-  assertEquals("First", responses.get(0).name());
+    assertEquals(savedFirst.getId(), responses.get(0).id());
+    assertEquals("First", responses.get(0).name());
 
-  assertEquals(savedSecond.getId(), responses.get(1).id());
-  assertEquals("Second", responses.get(1).name());
+    assertEquals(savedSecond.getId(), responses.get(1).id());
+    assertEquals("Second", responses.get(1).name());
 
-  verify(repository).saveAll(any());
-}
+    verify(repository).saveAll(any());
+  }
 
-@Test
-void createList_whenRequestListIsEmpty_returnsEmptyList() {
-  when(repository.saveAll(any())).thenReturn(List.of());
+  @Test
+  void createList_whenRequestListIsEmpty_returnsEmptyList() {
+    when(repository.saveAll(any())).thenReturn(List.of());
 
-  List<TestResponse> responses = service.createList(List.of());
+    List<TestResponse> responses = service.createList(List.of());
 
-  assertEquals(0, responses.size());
+    assertEquals(0, responses.size());
 
-  verify(repository).saveAll(any());
-}
+    verify(repository).saveAll(any());
+  }
 
   @Test
   void findById_whenEntityExists_returnsResponse() {
@@ -213,7 +211,7 @@ void createList_whenRequestListIsEmpty_returnsEmptyList() {
 
     assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
   }
-  
+
   @Test
   void existsById_whenEntityExists_returnsTrue() {
     UUID id = UUID.randomUUID();
@@ -240,7 +238,6 @@ void createList_whenRequestListIsEmpty_returnsEmptyList() {
     verify(repository).existsById(id);
   }
 
-
   private static class TestDocument extends LedgerDocument {
     private String name;
 
@@ -255,7 +252,7 @@ void createList_whenRequestListIsEmpty_returnsEmptyList() {
 
   private interface TestRepository extends LedgerRepository<TestDocument> {}
 
-  private record TestCreateRequest(String name) implements CreateRequest{}
+  private record TestCreateRequest(String name) implements CreateRequest {}
 
   private record TestUpdateRequest(String name) implements UpdateRequest {}
 

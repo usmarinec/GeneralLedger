@@ -1,5 +1,3 @@
 package com.usmarinec.ledger.dto;
 
-public interface CreateRequest {
-    
-}
+public interface CreateRequest {}

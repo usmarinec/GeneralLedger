@@ -35,7 +35,8 @@ public class SuccessFailureResponse<ResponseT extends Response>
    * @param message success message
    * @return SuccessFailureResponse
    */
-  public static <ResponseT extends Response> SuccessFailureResponse<ResponseT> success(String message) {
+  public static <ResponseT extends Response> SuccessFailureResponse<ResponseT> success(
+      String message) {
     return SuccessFailureResponse.<ResponseT>builder()
         .success(true)
         .message(message)
@@ -50,7 +51,8 @@ public class SuccessFailureResponse<ResponseT extends Response>
    * @param errorCode type of error
    * @return SuccessFailureResponse
    */
-  public static <ResponseT extends Response> SuccessFailureResponse<ResponseT> success(String message, String errorCode) {
+  public static <ResponseT extends Response> SuccessFailureResponse<ResponseT> success(
+      String message, String errorCode) {
     return SuccessFailureResponse.<ResponseT>builder()
         .success(true)
         .message(message)
@@ -66,7 +68,8 @@ public class SuccessFailureResponse<ResponseT extends Response>
    * @param item item returned by controller
    * @return SuccessFailureResponse
    */
-  public static <ResponseT extends Response> SuccessFailureResponse<ResponseT> success(String message, String errorCode, ResponseT item) {
+  public static <ResponseT extends Response> SuccessFailureResponse<ResponseT> success(
+      String message, String errorCode, ResponseT item) {
     List<ResponseT> items = new ArrayList<>();
     items.add(item);
     return SuccessFailureResponse.<ResponseT>builder()
@@ -101,7 +104,8 @@ public class SuccessFailureResponse<ResponseT extends Response>
    * @param message failure message
    * @return SuccessFailureResponse
    */
-  public static <ResponseT extends Response> SuccessFailureResponse<ResponseT> failure(String message) {
+  public static <ResponseT extends Response> SuccessFailureResponse<ResponseT> failure(
+      String message) {
     return SuccessFailureResponse.<ResponseT>builder()
         .success(false)
         .message(message)
@@ -116,7 +120,8 @@ public class SuccessFailureResponse<ResponseT extends Response>
    * @param errorCode type of error
    * @return SuccessFailureResponse
    */
-  public static <ResponseT extends Response> SuccessFailureResponse<ResponseT> failure(String message, String errorCode) {
+  public static <ResponseT extends Response> SuccessFailureResponse<ResponseT> failure(
+      String message, String errorCode) {
     return SuccessFailureResponse.<ResponseT>builder()
         .success(false)
         .message(message)

@@ -15,8 +15,9 @@ public class SuccessFailureResponseUtility<ResponseT extends Response> {
    * @param type T requestBody object
    * @return ResponseEntity
    */
-  public static <ResponseT extends Response> ResponseEntity<SuccessFailureResponse<ResponseT>> createSuccessFailureResponse(
-      boolean success, String message, HttpStatus status, ResponseT type) {
+  public static <ResponseT extends Response>
+      ResponseEntity<SuccessFailureResponse<ResponseT>> createSuccessFailureResponse(
+          boolean success, String message, HttpStatus status, ResponseT type) {
     if (success) {
       return new ResponseEntity<>(
           SuccessFailureResponse.success(message, status.getReasonPhrase(), type), status);
@@ -35,8 +36,9 @@ public class SuccessFailureResponseUtility<ResponseT extends Response> {
    * @param types List T requestBody list object
    * @return ResponseEntity
    */
-  public static <ResponseT extends Response> ResponseEntity<SuccessFailureResponse<ResponseT>> createSuccessFailureResponse(
-      boolean success, String message, HttpStatus status, List<ResponseT> types) {
+  public static <ResponseT extends Response>
+      ResponseEntity<SuccessFailureResponse<ResponseT>> createSuccessFailureResponse(
+          boolean success, String message, HttpStatus status, List<ResponseT> types) {
     if (success) {
       return new ResponseEntity<>(
           SuccessFailureResponse.success(message, status.getReasonPhrase(), types), status);
@@ -54,8 +56,9 @@ public class SuccessFailureResponseUtility<ResponseT extends Response> {
    * @param status HttpStatus value response code
    * @return ResponseEntity
    */
-  public static <ResponseT extends Response> ResponseEntity<SuccessFailureResponse<ResponseT>> createSuccessFailureResponse(
-      boolean success, String message, HttpStatus status) {
+  public static <ResponseT extends Response>
+      ResponseEntity<SuccessFailureResponse<ResponseT>> createSuccessFailureResponse(
+          boolean success, String message, HttpStatus status) {
     if (success) {
       return new ResponseEntity<>(
           SuccessFailureResponse.success(message, status.getReasonPhrase()), status);
