@@ -43,6 +43,12 @@ public abstract class LedgerService<
     return toResponse(savedLedgerEntity);
   }
 
+  /**
+   * Creates and saves a list of ledger documents.
+   *
+   * @param requests the list of create requests
+   * @return the list of created documents as a response DTO
+   */
   @Transactional
   public List<ResponseT> createList(List<CreateReqT> requests) {
     List<T> ledgerDocuments = new ArrayList<>();

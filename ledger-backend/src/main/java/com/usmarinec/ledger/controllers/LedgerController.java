@@ -33,7 +33,7 @@ public abstract class LedgerController<
   /**
    * Creates a single record.
    *
-   * @param ledgerDocument record type to be created
+   * @param request record type to be created
    * @return SuccessFailureResponse with created record
    */
   @PostMapping("/create")
@@ -86,8 +86,8 @@ public abstract class LedgerController<
   /**
    * Update record by its id.
    *
-   * @param id string id value
-   * @param type record type to be updated
+   * @param id UUID id value
+   * @param request record type to be updated
    * @return SuccessFailureResponse with record
    */
   @PutMapping("/update/{id}")

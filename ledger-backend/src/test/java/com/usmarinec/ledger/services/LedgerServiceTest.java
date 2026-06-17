@@ -58,7 +58,7 @@ class LedgerServiceTest {
 
   @Test
   void createList_savesAllEntitiesAndReturnsAllResponses() {
-    List<TestCreateRequest> requests =
+    final List<TestCreateRequest> requests =
         List.of(new TestCreateRequest("First"), new TestCreateRequest("Second"));
 
     TestDocument savedFirst = new TestDocument();
