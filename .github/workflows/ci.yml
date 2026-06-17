@@ -138,3 +138,6 @@ jobs:
       
       - name: domain tests
         run: ./gradlew :ledger-backend:test --tests com.usmarinec.ledger.domain.*
+      
+      - name: service tests
+        run: ./gradlew :ledger-backend:test --tests com.usmarinec.ledger.services.*
