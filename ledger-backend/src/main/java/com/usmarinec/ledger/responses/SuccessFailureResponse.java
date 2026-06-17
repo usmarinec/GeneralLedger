@@ -1,6 +1,6 @@
 package com.usmarinec.ledger.responses;
 
-import com.usmarinec.ledger.LedgerDocument;
+import com.usmarinec.ledger.dto.Response;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -13,7 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class SuccessFailureResponse<T extends LedgerDocument>
+public class SuccessFailureResponse<ResponseT extends Response>
     implements SuccessFailureResponseInterface {
 
   /**
@@ -21,8 +21,8 @@ public class SuccessFailureResponse<T extends LedgerDocument>
    *
    * @return SuccessFailureResponse
    */
-  public static <T> SuccessFailureResponse<T> success() {
-    return SuccessFailureResponse.<T>builder()
+  public static <ResponseT extends Response> SuccessFailureResponse<ResponseT> success() {
+    return SuccessFailureResponse.<ResponseT>builder()
         .success(true)
         .message(StringUtils.EMPTY)
         .httpStatus(null)
@@ -35,8 +35,8 @@ public class SuccessFailureResponse<T extends LedgerDocument>
    * @param message success message
    * @return SuccessFailureResponse
    */
-  public static <T> SuccessFailureResponse<T> success(String message) {
-    return SuccessFailureResponse.<T>builder()
+  public static <ResponseT extends Response> SuccessFailureResponse<ResponseT> success(String message) {
+    return SuccessFailureResponse.<ResponseT>builder()
         .success(true)
         .message(message)
         .httpStatus(null)
@@ -50,8 +50,8 @@ public class SuccessFailureResponse<T extends LedgerDocument>
    * @param errorCode type of error
    * @return SuccessFailureResponse
    */
-  public static <T> SuccessFailureResponse<T> success(String message, String errorCode) {
-    return SuccessFailureResponse.<T>builder()
+  public static <ResponseT extends Response> SuccessFailureResponse<ResponseT> success(String message, String errorCode) {
+    return SuccessFailureResponse.<ResponseT>builder()
         .success(true)
         .message(message)
         .httpStatus(errorCode)
@@ -66,10 +66,10 @@ public class SuccessFailureResponse<T extends LedgerDocument>
    * @param item item returned by controller
    * @return SuccessFailureResponse
    */
-  public static <T> SuccessFailureResponse<T> success(String message, String errorCode, T item) {
-    List<T> items = new ArrayList<>();
+  public static <ResponseT extends Response> SuccessFailureResponse<ResponseT> success(String message, String errorCode, ResponseT item) {
+    List<ResponseT> items = new ArrayList<>();
     items.add(item);
-    return SuccessFailureResponse.<T>builder()
+    return SuccessFailureResponse.<ResponseT>builder()
         .success(true)
         .message(message)
         .items(items)
@@ -85,9 +85,9 @@ public class SuccessFailureResponse<T extends LedgerDocument>
    * @param items items returned by controller
    * @return SuccessFailureResponse
    */
-  public static <T> SuccessFailureResponse<T> success(
-      String message, String errorCode, List<T> items) {
-    return SuccessFailureResponse.<T>builder()
+  public static <ResponseT extends Response> SuccessFailureResponse<ResponseT> success(
+      String message, String errorCode, List<ResponseT> items) {
+    return SuccessFailureResponse.<ResponseT>builder()
         .success(true)
         .message(message)
         .items(items)
@@ -101,8 +101,8 @@ public class SuccessFailureResponse<T extends LedgerDocument>
    * @param message failure message
    * @return SuccessFailureResponse
    */
-  public static <T> SuccessFailureResponse<T> failure(String message) {
-    return SuccessFailureResponse.<T>builder()
+  public static <ResponseT extends Response> SuccessFailureResponse<ResponseT> failure(String message) {
+    return SuccessFailureResponse.<ResponseT>builder()
         .success(false)
         .message(message)
         .httpStatus(null)
@@ -116,8 +116,8 @@ public class SuccessFailureResponse<T extends LedgerDocument>
    * @param errorCode type of error
    * @return SuccessFailureResponse
    */
-  public static <T> SuccessFailureResponse<T> failure(String message, String errorCode) {
-    return SuccessFailureResponse.<T>builder()
+  public static <ResponseT extends Response> SuccessFailureResponse<ResponseT> failure(String message, String errorCode) {
+    return SuccessFailureResponse.<ResponseT>builder()
         .success(false)
         .message(message)
         .httpStatus(errorCode)
@@ -126,8 +126,8 @@ public class SuccessFailureResponse<T extends LedgerDocument>
 
   private boolean success;
   private String message;
-  private List<T> items;
-  private String httpStattus;
+  private List<ResponseT> items;
+  private String httpStatus;
 
   @Override
   public boolean getSuccess() {

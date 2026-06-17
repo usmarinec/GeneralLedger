@@ -1,11 +1,11 @@
 package com.usmarinec.ledger.responses;
 
-import com.usmarinec.ledger.LedgerDocument;
+import com.usmarinec.ledger.dto.Response;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-public class SuccessFailureResponseUtility<T extends LedgerDocument> {
+public class SuccessFailureResponseUtility<ResponseT extends Response> {
   /**
    * Creates a ResponseEntity of type SuccessFailureResponse.
    *
@@ -15,8 +15,8 @@ public class SuccessFailureResponseUtility<T extends LedgerDocument> {
    * @param type T requestBody object
    * @return ResponseEntity
    */
-  public static <T> ResponseEntity<SuccessFailureResponse<T>> createSuccessFailureResponse(
-      boolean success, String message, HttpStatus status, T type) {
+  public static <ResponseT extends Response> ResponseEntity<SuccessFailureResponse<ResponseT>> createSuccessFailureResponse(
+      boolean success, String message, HttpStatus status, ResponseT type) {
     if (success) {
       return new ResponseEntity<>(
           SuccessFailureResponse.success(message, status.getReasonPhrase(), type), status);
@@ -35,8 +35,8 @@ public class SuccessFailureResponseUtility<T extends LedgerDocument> {
    * @param types List T requestBody list object
    * @return ResponseEntity
    */
-  public static <T> ResponseEntity<SuccessFailureResponse<T>> createSuccessFailureResponse(
-      boolean success, String message, HttpStatus status, List<T> types) {
+  public static <ResponseT extends Response> ResponseEntity<SuccessFailureResponse<ResponseT>> createSuccessFailureResponse(
+      boolean success, String message, HttpStatus status, List<ResponseT> types) {
     if (success) {
       return new ResponseEntity<>(
           SuccessFailureResponse.success(message, status.getReasonPhrase(), types), status);
@@ -54,7 +54,7 @@ public class SuccessFailureResponseUtility<T extends LedgerDocument> {
    * @param status HttpStatus value response code
    * @return ResponseEntity
    */
-  public static <T> ResponseEntity<SuccessFailureResponse<T>> createSuccessFailureResponse(
+  public static <ResponseT extends Response> ResponseEntity<SuccessFailureResponse<ResponseT>> createSuccessFailureResponse(
       boolean success, String message, HttpStatus status) {
     if (success) {
       return new ResponseEntity<>(
