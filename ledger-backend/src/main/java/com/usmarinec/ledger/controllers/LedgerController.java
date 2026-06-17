@@ -1,12 +1,17 @@
 package com.usmarinec.ledger.controllers;
 
-import com.usmarinec.ledger.LedgerDocument;
+import com.usmarinec.ledger.domain.LedgerDocument;
+import com.usmarinec.ledger.repositories.LedgerRepository;
 import com.usmarinec.ledger.services.LedgerService;
 import com.usmarinec.ledger.responses.SuccessFailureResponse;
 import com.usmarinec.ledger.responses.SuccessFailureResponseUtility;
 import com.usmarinec.ledger.exceptions.NotFoundException;
+import com.usmarinec.ledger.dto.Response;
+import com.usmarinec.ledger.dto.CreateRequest;
+import com.usmarinec.ledger.dto.UpdateRequest;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +23,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 public abstract class LedgerController<
-    T extends LedgerDocument, R extends LedgerRepository<T>, S extends LedgerService<T, R>> {
+    T extends LedgerDocument, R extends LedgerRepository<T>, CreateReqT extends CreateRequest, UpdateReqT extends UpdateRequest, ResponseT extends Response, S extends LedgerService<T, R, CreateReqT, UpdateReqT, ResponseT>> {
   @Autowired S service;
   
   /**
@@ -28,9 +33,9 @@ public abstract class LedgerController<
    * @return SuccessFailureResponse with created record
    */
   @PostMapping("/create")
-  public ResponseEntity<SuccessFailureResponse<T>> create(@RequestBody T ledgerDocument) {
-      T savedDocument = this.service.save(ledgerDocument);
-      return SuccessFailureResponseUtility.create(true, "Record created", HttpStatus.CREATED, savedDocument);
+  public ResponseEntity<SuccessFailureResponse<ResponseT>> create(@RequestBody CreateReqT request) {
+      ResponseT savedDocument = this.service.create(request);
+      return SuccessFailureResponseUtility.createSuccessFailureResponse(true, "Record created", HttpStatus.CREATED, savedDocument);
   }
   
     /**
@@ -40,22 +45,10 @@ public abstract class LedgerController<
    * @return SuccessFailureResponse with saved records
    */
   @PostMapping("/create-list")
-  public ResponseEntity<SuccessFailureResponse<T>> createList(@RequestBody List<T> types) {
-    List<T> savedTypes = this.service.saveAll(types);
+  public ResponseEntity<SuccessFailureResponse<ResponseT>> createList(@RequestBody List<CreateReqT> types) {
+    List<ResponseT> savedTypes = this.service.createList(types);
     return SuccessFailureResponseUtility.createSuccessFailureResponse(
         true, "List of records created", HttpStatus.CREATED, savedTypes);
-  }
-
-  /**
-   * Fetch all records.
-   *
-   * @return SuccessFailureResponse with records
-   */
-  @GetMapping("/fetch")
-  public ResponseEntity<SuccessFailureResponse<T>> getAll() {
-    List<T> types = this.service.getAll();
-    return SuccessFailureResponseUtility.createSuccessFailureResponse(
-        true, "All records retreived", HttpStatus.OK, types);
   }
 
   /**
@@ -65,16 +58,23 @@ public abstract class LedgerController<
    * @return SuccessFailureResponse with record
    */
   @GetMapping("/fetch/{id}")
-  public ResponseEntity<SuccessFailureResponse<T>> getById(@PathVariable String id) {
-    Optional<T> optionalType = this.service.getById(id);
+  public ResponseEntity<SuccessFailureResponse<ResponseT>> findById(@PathVariable UUID id) {
+    ResponseT foundLedgerDocument = this.service.findById(id);
 
-    return optionalType
-        .map(
-            type ->
-                SuccessFailureResponseUtility.createSuccessFailureResponse(
-                    true, "Record found", HttpStatus.OK, type))
-        .orElseThrow(() -> new NotFoundException("Resource with id: '" + id + "' not found"));
+    return SuccessFailureResponseUtility.createSuccessFailureResponse(true, "Record found", HttpStatus.OK, foundLedgerDocument);
   }
+  /**
+   * Fetch all records.
+   *
+   * @return SuccessFailureResponse with records
+   */
+  @GetMapping("/fetch")
+  public ResponseEntity<SuccessFailureResponse<ResponseT>> getAll() {
+    List<ResponseT> types = this.service.findAll();
+    return SuccessFailureResponseUtility.createSuccessFailureResponse(
+        true, "All records retreived", HttpStatus.OK, types);
+  }
+
 
   /**
    * Update record by its id.
@@ -84,11 +84,10 @@ public abstract class LedgerController<
    * @return SuccessFailureResponse with record
    */
   @PutMapping("/update/{id}")
-  public ResponseEntity<SuccessFailureResponse<T>> update(
-      @PathVariable String id, @RequestBody T type) {
+  public ResponseEntity<SuccessFailureResponse<ResponseT>> update(
+      @PathVariable UUID id, @RequestBody UpdateReqT request) {
     if (this.service.existsById(id)) {
-      type.setId(id);
-      T updatedType = this.service.save(type);
+      ResponseT updatedType = this.service.update(id, request);
       return SuccessFailureResponseUtility.createSuccessFailureResponse(
           true, "Record: '" + id + "' updated", HttpStatus.OK, updatedType);
     } else {
@@ -103,7 +102,7 @@ public abstract class LedgerController<
    * @return SuccessFailureResponse with status message
    */
   @DeleteMapping("/delete/{id}")
-  public ResponseEntity<SuccessFailureResponse<T>> delete(@PathVariable String id) {
+  public ResponseEntity<SuccessFailureResponse<ResponseT>> delete(@PathVariable UUID id) {
     if (this.service.existsById(id)) {
       this.service.delete(id);
       return SuccessFailureResponseUtility.createSuccessFailureResponse(
