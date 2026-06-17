@@ -1,7 +1,11 @@
 package com.usmarinec.ledger.services;
 
 import com.usmarinec.ledger.domain.LedgerDocument;
+import com.usmarinec.ledger.dto.CreateRequest;
+import com.usmarinec.ledger.dto.Response;
+import com.usmarinec.ledger.dto.UpdateRequest;
 import com.usmarinec.ledger.repositories.LedgerRepository;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +23,11 @@ import org.springframework.web.server.ResponseStatusException;
  * @param <ResponseT> the response DTO type
  */
 public abstract class LedgerService<
-    T extends LedgerDocument, R extends LedgerRepository<T>, CreateReqT, UpdateReqT, ResponseT> {
+    T extends LedgerDocument,
+    R extends LedgerRepository<T>,
+    CreateReqT extends CreateRequest,
+    UpdateReqT extends UpdateRequest,
+    ResponseT extends Response> {
   @Autowired protected R repository;
 
   /**
@@ -33,6 +41,22 @@ public abstract class LedgerService<
     T ledgerEntity = this.createLedgerEntity(request);
     T savedLedgerEntity = this.repository.save(ledgerEntity);
     return toResponse(savedLedgerEntity);
+  }
+
+  /**
+   * Creates and saves a list of ledger documents.
+   *
+   * @param requests the list of create requests
+   * @return the list of created documents as a response DTO
+   */
+  @Transactional
+  public List<ResponseT> createList(List<CreateReqT> requests) {
+    List<T> ledgerDocuments = new ArrayList<>();
+    requests.forEach(req -> ledgerDocuments.add(this.createLedgerEntity(req)));
+    List<T> savedLedgerDocuments = this.repository.saveAll(ledgerDocuments);
+    List<ResponseT> responseList = new ArrayList<>();
+    savedLedgerDocuments.forEach(ld -> responseList.add(this.toResponse(ld)));
+    return responseList;
   }
 
   /**
@@ -81,6 +105,17 @@ public abstract class LedgerService<
   public void delete(UUID id) {
     T ledgerEntity = this.getLedgerEntity(id);
     this.repository.delete(ledgerEntity);
+  }
+
+  /**
+   * Checks if a record exists in the database.
+   *
+   * @param id the document id
+   * @return boolean if record found
+   */
+  @Transactional(readOnly = true)
+  public boolean existsById(UUID id) {
+    return this.repository.existsById(id);
   }
 
   /**
