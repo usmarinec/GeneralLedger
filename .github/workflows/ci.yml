@@ -141,3 +141,9 @@ jobs:
       
       - name: service tests
         run: ./gradlew :ledger-backend:test --tests com.usmarinec.ledger.services.*
+        
+      - name: controller tests
+        run: ./gradlew :ledger-backend:test --tests com.usmarinec.ledger.controllers.*
+        
+      - name: response tests
+        run: ./gradlew :ledger-backend:test --tests com.usmarinec.ledger.responses.*
