@@ -80,7 +80,7 @@ public abstract class LedgerController<
   public ResponseEntity<SuccessFailureResponse<ResponseT>> getAll() {
     List<ResponseT> types = this.service.findAll();
     return SuccessFailureResponseUtility.createSuccessFailureResponse(
-        true, "All records retreived", HttpStatus.OK, types);
+        true, "All records retrieved", HttpStatus.OK, types);
   }
 
   /**
