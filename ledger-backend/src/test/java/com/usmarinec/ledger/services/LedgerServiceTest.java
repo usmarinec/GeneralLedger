@@ -2,6 +2,8 @@ package com.usmarinec.ledger.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -9,6 +11,9 @@ import static org.mockito.Mockito.when;
 
 import com.usmarinec.ledger.domain.LedgerDocument;
 import com.usmarinec.ledger.repositories.LedgerRepository;
+import com.usmarinec.ledger.dto.Response;
+import com.usmarinec.ledger.dto.CreateRequest;
+import com.usmarinec.ledger.dto.UpdateRequest;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -50,6 +55,47 @@ class LedgerServiceTest {
 
     verify(repository).save(any(TestDocument.class));
   }
+  
+  @Test
+void createList_savesAllEntitiesAndReturnsAllResponses() {
+  List<TestCreateRequest> requests =
+      List.of(
+          new TestCreateRequest("First"),
+          new TestCreateRequest("Second"));
+
+  TestDocument savedFirst = new TestDocument();
+  savedFirst.setId(UUID.randomUUID());
+  savedFirst.setName("First");
+
+  TestDocument savedSecond = new TestDocument();
+  savedSecond.setId(UUID.randomUUID());
+  savedSecond.setName("Second");
+
+  when(repository.saveAll(any())).thenReturn(List.of(savedFirst, savedSecond));
+
+  List<TestResponse> responses = service.createList(requests);
+
+  assertEquals(2, responses.size());
+
+  assertEquals(savedFirst.getId(), responses.get(0).id());
+  assertEquals("First", responses.get(0).name());
+
+  assertEquals(savedSecond.getId(), responses.get(1).id());
+  assertEquals("Second", responses.get(1).name());
+
+  verify(repository).saveAll(any());
+}
+
+@Test
+void createList_whenRequestListIsEmpty_returnsEmptyList() {
+  when(repository.saveAll(any())).thenReturn(List.of());
+
+  List<TestResponse> responses = service.createList(List.of());
+
+  assertEquals(0, responses.size());
+
+  verify(repository).saveAll(any());
+}
 
   @Test
   void findById_whenEntityExists_returnsResponse() {
@@ -167,6 +213,33 @@ class LedgerServiceTest {
 
     assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
   }
+  
+  @Test
+  void existsById_whenEntityExists_returnsTrue() {
+    UUID id = UUID.randomUUID();
+
+    when(repository.existsById(id)).thenReturn(true);
+
+    boolean exists = service.existsById(id);
+
+    assertTrue(exists);
+
+    verify(repository).existsById(id);
+  }
+
+  @Test
+  void existsById_whenEntityDoesNotExist_returnsFalse() {
+    UUID id = UUID.randomUUID();
+
+    when(repository.existsById(id)).thenReturn(false);
+
+    boolean exists = service.existsById(id);
+
+    assertFalse(exists);
+
+    verify(repository).existsById(id);
+  }
+
 
   private static class TestDocument extends LedgerDocument {
     private String name;
@@ -182,11 +255,11 @@ class LedgerServiceTest {
 
   private interface TestRepository extends LedgerRepository<TestDocument> {}
 
-  private record TestCreateRequest(String name) {}
+  private record TestCreateRequest(String name) implements CreateRequest{}
 
-  private record TestUpdateRequest(String name) {}
+  private record TestUpdateRequest(String name) implements UpdateRequest {}
 
-  private record TestResponse(UUID id, String name) {}
+  private record TestResponse(UUID id, String name) implements Response {}
 
   private static class TestLedgerService
       extends LedgerService<

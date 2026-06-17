@@ -2,8 +2,13 @@ package com.usmarinec.ledger.services;
 
 import com.usmarinec.ledger.domain.LedgerDocument;
 import com.usmarinec.ledger.repositories.LedgerRepository;
+import com.usmarinec.ledger.dto.Response;
+import com.usmarinec.ledger.dto.CreateRequest;
+import com.usmarinec.ledger.dto.UpdateRequest;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.UUID;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +24,7 @@ import org.springframework.web.server.ResponseStatusException;
  * @param <ResponseT> the response DTO type
  */
 public abstract class LedgerService<
-    T extends LedgerDocument, R extends LedgerRepository<T>, CreateReqT, UpdateReqT, ResponseT> {
+    T extends LedgerDocument, R extends LedgerRepository<T>, CreateReqT extends CreateRequest, UpdateReqT extends UpdateRequest, ResponseT extends Response> {
   @Autowired protected R repository;
 
   /**
@@ -33,6 +38,16 @@ public abstract class LedgerService<
     T ledgerEntity = this.createLedgerEntity(request);
     T savedLedgerEntity = this.repository.save(ledgerEntity);
     return toResponse(savedLedgerEntity);
+  }
+  
+  @Transactional
+  public List<ResponseT> createList(List<CreateReqT> requests){
+    List<T> ledgerDocuments = new ArrayList<>();
+    requests.forEach(req ->ledgerDocuments.add(this.createLedgerEntity(req)));
+    List<T> savedLedgerDocuments = this.repository.saveAll(ledgerDocuments);
+    List<ResponseT> responseList = new ArrayList<>();
+    savedLedgerDocuments.forEach(ld -> responseList.add(this.toResponse(ld)));
+    return responseList;
   }
 
   /**
