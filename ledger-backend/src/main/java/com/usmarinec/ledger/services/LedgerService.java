@@ -82,6 +82,17 @@ public abstract class LedgerService<
     T ledgerEntity = this.getLedgerEntity(id);
     this.repository.delete(ledgerEntity);
   }
+  
+  /**
+   * Checks if a record exists in the database.
+   * 
+   * @param id the document id
+   * @return boolean if record found
+   */
+  @Transactional(readOnly = true)
+  public boolean existsById(UUID id){
+    return this.repository.existsById(id);
+  }
 
   /**
    * Retrieves a ledger document by id or throws a not-found exception.
