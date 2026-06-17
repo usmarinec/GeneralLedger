@@ -2,9 +2,6 @@ name: CI
 
 on:
   pull_request:
-    branches:
-      - main
-      - develop
     types:
       - opened
       - synchronize
@@ -141,3 +138,12 @@ jobs:
       
       - name: domain tests
         run: ./gradlew :ledger-backend:test --tests com.usmarinec.ledger.domain.*
+      
+      - name: service tests
+        run: ./gradlew :ledger-backend:test --tests com.usmarinec.ledger.services.*
+        
+      - name: controller tests
+        run: ./gradlew :ledger-backend:test --tests com.usmarinec.ledger.controllers.*
+        
+      - name: response tests
+        run: ./gradlew :ledger-backend:test --tests com.usmarinec.ledger.responses.*
