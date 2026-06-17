@@ -131,7 +131,7 @@ class LedgerControllerTest {
 
     assertNotNull(body);
     assertEquals(true, body.getSuccess());
-    assertEquals("All records retreived", body.getMessage());
+    assertEquals("All records retrieved", body.getMessage());
     assertEquals("OK", body.getHttpStatus());
     assertEquals(foundResponses, body.getItems());
 
