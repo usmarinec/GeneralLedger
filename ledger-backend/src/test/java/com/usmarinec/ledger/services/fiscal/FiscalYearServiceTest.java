@@ -52,17 +52,14 @@ class FiscalYearServiceTest {
   @Test
   void create_whenRequestIsValid_savesFiscalYearAndReturnsResponse() {
     UUID accountingEntityId = UUID.randomUUID();
-    UUID fiscalYearId = UUID.randomUUID();
+    final UUID fiscalYearId = UUID.randomUUID();
 
     AccountingEntity accountingEntity = new AccountingEntity();
     accountingEntity.setId(accountingEntityId);
 
     CreateFiscalYearRequest request =
         new CreateFiscalYearRequest(
-            accountingEntityId,
-            2026,
-            LocalDate.of(2026, 1, 1),
-            LocalDate.of(2026, 12, 31));
+            accountingEntityId, 2026, LocalDate.of(2026, 1, 1), LocalDate.of(2026, 12, 31));
 
     when(accountingEntityRepository.findById(accountingEntityId))
         .thenReturn(Optional.of(accountingEntity));
@@ -105,10 +102,7 @@ class FiscalYearServiceTest {
 
     CreateFiscalYearRequest request =
         new CreateFiscalYearRequest(
-            accountingEntityId,
-            2026,
-            LocalDate.of(2026, 12, 31),
-            LocalDate.of(2026, 1, 1));
+            accountingEntityId, 2026, LocalDate.of(2026, 12, 31), LocalDate.of(2026, 1, 1));
 
     ResponseStatusException exception =
         assertThrows(ResponseStatusException.class, () -> service.create(request));
@@ -125,10 +119,7 @@ class FiscalYearServiceTest {
 
     CreateFiscalYearRequest request =
         new CreateFiscalYearRequest(
-            accountingEntityId,
-            2026,
-            LocalDate.of(2026, 1, 1),
-            LocalDate.of(2026, 12, 31));
+            accountingEntityId, 2026, LocalDate.of(2026, 1, 1), LocalDate.of(2026, 12, 31));
 
     when(accountingEntityRepository.findById(accountingEntityId)).thenReturn(Optional.empty());
 
@@ -150,10 +141,7 @@ class FiscalYearServiceTest {
 
     CreateFiscalYearRequest request =
         new CreateFiscalYearRequest(
-            accountingEntityId,
-            2026,
-            LocalDate.of(2026, 1, 1),
-            LocalDate.of(2026, 12, 31));
+            accountingEntityId, 2026, LocalDate.of(2026, 1, 1), LocalDate.of(2026, 12, 31));
 
     when(accountingEntityRepository.findById(accountingEntityId))
         .thenReturn(Optional.of(accountingEntity));
@@ -187,11 +175,7 @@ class FiscalYearServiceTest {
 
     UpdateFiscalYearRequest request =
         new UpdateFiscalYearRequest(
-            accountingEntityId,
-            2026,
-            LocalDate.of(2026, 1, 1),
-            LocalDate.of(2026, 12, 31),
-            true);
+            accountingEntityId, 2026, LocalDate.of(2026, 1, 1), LocalDate.of(2026, 12, 31), true);
 
     when(fiscalYearRepository.findById(fiscalYearId)).thenReturn(Optional.of(existingFiscalYear));
     when(accountingEntityRepository.findById(accountingEntityId))
@@ -221,7 +205,7 @@ class FiscalYearServiceTest {
   void update_whenDuplicateFiscalYearBelongsToDifferentRecord_throwsConflict() {
     UUID accountingEntityId = UUID.randomUUID();
     UUID fiscalYearId = UUID.randomUUID();
-    UUID otherFiscalYearId = UUID.randomUUID();
+    final UUID otherFiscalYearId = UUID.randomUUID();
 
     AccountingEntity accountingEntity = new AccountingEntity();
     accountingEntity.setId(accountingEntityId);
@@ -238,11 +222,7 @@ class FiscalYearServiceTest {
 
     UpdateFiscalYearRequest request =
         new UpdateFiscalYearRequest(
-            accountingEntityId,
-            2026,
-            LocalDate.of(2026, 1, 1),
-            LocalDate.of(2026, 12, 31),
-            false);
+            accountingEntityId, 2026, LocalDate.of(2026, 1, 1), LocalDate.of(2026, 12, 31), false);
 
     when(fiscalYearRepository.findById(fiscalYearId)).thenReturn(Optional.of(existingFiscalYear));
     when(accountingEntityRepository.findById(accountingEntityId))
@@ -251,9 +231,7 @@ class FiscalYearServiceTest {
         .thenReturn(Optional.of(duplicateFiscalYear));
 
     ResponseStatusException exception =
-        assertThrows(
-            ResponseStatusException.class,
-            () -> service.update(fiscalYearId, request));
+        assertThrows(ResponseStatusException.class, () -> service.update(fiscalYearId, request));
 
     assertEquals(HttpStatus.CONFLICT, exception.getStatusCode());
 
@@ -278,11 +256,7 @@ class FiscalYearServiceTest {
 
     UpdateFiscalYearRequest request =
         new UpdateFiscalYearRequest(
-            accountingEntityId,
-            2026,
-            LocalDate.of(2026, 1, 1),
-            LocalDate.of(2026, 12, 31),
-            true);
+            accountingEntityId, 2026, LocalDate.of(2026, 1, 1), LocalDate.of(2026, 12, 31), true);
 
     when(fiscalYearRepository.findById(fiscalYearId)).thenReturn(Optional.of(existingFiscalYear));
     when(accountingEntityRepository.findById(accountingEntityId))
