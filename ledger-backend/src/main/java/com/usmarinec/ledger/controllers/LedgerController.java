@@ -28,7 +28,7 @@ public abstract class LedgerController<
     UpdateReqT extends UpdateRequest,
     ResponseT extends Response,
     S extends LedgerService<T, R, CreateReqT, UpdateReqT, ResponseT>> {
-  @Autowired S service;
+  @Autowired protected S service;
 
   /**
    * Creates a single record.
