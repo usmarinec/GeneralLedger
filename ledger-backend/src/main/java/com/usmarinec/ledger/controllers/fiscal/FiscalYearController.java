@@ -35,7 +35,7 @@ public class FiscalYearController
    * @param accountingEntityId id to search
    * @return SuccessFailureResponse with List of FiscalYears
    */
-  @GetMapping("/fetchByAcctEntity/{accountingEntityId}")
+  @GetMapping("/fetch-by-accounting-entity/{accountingEntityId}")
   public ResponseEntity<SuccessFailureResponse<FiscalYearResponse>> fetchByAccountingEntityId(
       @PathVariable UUID accountingEntityId) {
     List<FiscalYearResponse> fiscalYearsList =

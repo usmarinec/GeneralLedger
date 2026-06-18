@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class FiscalYearService
@@ -34,7 +35,7 @@ public class FiscalYearService
     if (this.repository.existsByAccountingEntity_IdAndYear(
         request.accountingEntityId(), request.year())) {
       throw new ResponseStatusException(
-          HttpStatus.CONFLICT, "Fiscal year aleady exists for this accounting entity");
+          HttpStatus.CONFLICT, "Fiscal year already exists for this accounting entity");
     }
 
     FiscalYear fiscalYear = new FiscalYear();
@@ -82,6 +83,7 @@ public class FiscalYearService
    *
    * @param accountingEntityId UUID @Return List<FiscalYearResponse> response record
    */
+  @Transactional(readOnly = true)
   public List<FiscalYearResponse> findByAccountingEntity(UUID accountingEntityId) {
     return this.repository.findByAccountingEntity_IdOrderByYearDesc(accountingEntityId).stream()
         .map(this::toResponse)
