@@ -9,5 +9,6 @@ public record UpdateFiscalYearRequest(
     @NotNull UUID accountingEntityId,
     @NotNull Integer year,
     @NotNull LocalDate startDate,
-    @NotNull LocalDate endDate)
+    @NotNull LocalDate endDate,
+    @NotNull boolean closed)
     implements UpdateRequest {}

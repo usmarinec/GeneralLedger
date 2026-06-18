@@ -7,9 +7,10 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface FiscalYearRepository extends LedgerRepository<FiscalYear> {
+
   List<FiscalYear> findByAccountingEntity_IdOrderByYearDesc(UUID accountingEntityId);
 
-  Optional<FiscalYear> findByAccountingEntity_IdAndYear(UUID AccountingEntityId, Integer year);
+  Optional<FiscalYear> findByAccountingEntity_IdAndYear(UUID accountingEntityId, Integer year);
 
-  boolean existsByAccountingEntity_IdAndYear(UUID AccountingEntityId, Integer year);
+  boolean existsByAccountingEntity_IdAndYear(UUID accountingEntityId, Integer year);
 }
