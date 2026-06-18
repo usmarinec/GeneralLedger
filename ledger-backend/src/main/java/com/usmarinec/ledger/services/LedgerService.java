@@ -18,8 +18,8 @@ import org.springframework.web.server.ResponseStatusException;
  *
  * @param <T> the JPA entity type
  * @param <R> the Spring Data repository type
- * @param <CreateRequestT> the create request DTO type
- * @param <UpdateRequestT> the update request DTO type
+ * @param <CreateReqT> the create request DTO type
+ * @param <UpdateReqT> the update request DTO type
  * @param <ResponseT> the response DTO type
  */
 public abstract class LedgerService<
