@@ -25,7 +25,7 @@ class FiscalYearTest {
     AccountingEntity entity = createAccountingEntity("Test Entity");
 
     FiscalYear fiscalYear = new FiscalYear();
-    fiscalYear.setEntity(entity);
+    fiscalYear.setAccountingEntity(entity);
     fiscalYear.setYear(2026);
     fiscalYear.setStartDate(LocalDate.of(2026, 1, 1));
     fiscalYear.setEndDate(LocalDate.of(2026, 12, 31));
@@ -52,7 +52,7 @@ class FiscalYearTest {
 
     assertThat(found).isNotNull();
     assertThat(found.getId()).isEqualTo(fiscalYearId);
-    assertThat(found.getEntity().getId()).isEqualTo(entity.getId());
+    assertThat(found.getAccountingEntity().getId()).isEqualTo(entity.getId());
     assertThat(found.getYear()).isEqualTo(2026);
     assertThat(found.getStartDate()).isEqualTo(LocalDate.of(2026, 1, 1));
     assertThat(found.getEndDate()).isEqualTo(LocalDate.of(2026, 12, 31));
@@ -64,7 +64,7 @@ class FiscalYearTest {
     AccountingEntity entity = createAccountingEntity("Test Entity");
 
     FiscalYear fiscalYear = new FiscalYear();
-    fiscalYear.setEntity(entity);
+    fiscalYear.setAccountingEntity(entity);
     fiscalYear.setYear(2026);
     fiscalYear.setStartDate(LocalDate.of(2026, 1, 1));
     fiscalYear.setEndDate(LocalDate.of(2026, 12, 31));
@@ -83,7 +83,7 @@ class FiscalYearTest {
     createFiscalYear(entity, 2026, LocalDate.of(2026, 1, 1), LocalDate.of(2026, 12, 31));
 
     FiscalYear duplicate = new FiscalYear();
-    duplicate.setEntity(entity);
+    duplicate.setAccountingEntity(entity);
     duplicate.setYear(2026);
     duplicate.setStartDate(LocalDate.of(2026, 1, 1));
     duplicate.setEndDate(LocalDate.of(2026, 12, 31));
@@ -107,8 +107,8 @@ class FiscalYearTest {
     assertThat(firstFiscalYear.getId()).isNotNull();
     assertThat(secondFiscalYear.getId()).isNotNull();
     assertThat(firstFiscalYear.getYear()).isEqualTo(secondFiscalYear.getYear());
-    assertThat(firstFiscalYear.getEntity().getId())
-        .isNotEqualTo(secondFiscalYear.getEntity().getId());
+    assertThat(firstFiscalYear.getAccountingEntity().getId())
+        .isNotEqualTo(secondFiscalYear.getAccountingEntity().getId());
   }
 
   @Test
@@ -116,7 +116,7 @@ class FiscalYearTest {
     AccountingEntity entity = createAccountingEntity("Test Entity");
 
     FiscalYear fiscalYear = new FiscalYear();
-    fiscalYear.setEntity(entity);
+    fiscalYear.setAccountingEntity(entity);
     fiscalYear.setYear(2026);
     fiscalYear.setStartDate(LocalDate.of(2026, 1, 1));
     fiscalYear.setEndDate(LocalDate.of(2026, 12, 31));
@@ -148,7 +148,7 @@ class FiscalYearTest {
   private FiscalYear createFiscalYear(
       AccountingEntity entity, Integer year, LocalDate startDate, LocalDate endDate) {
     FiscalYear fiscalYear = new FiscalYear();
-    fiscalYear.setEntity(entity);
+    fiscalYear.setAccountingEntity(entity);
     fiscalYear.setYear(year);
     fiscalYear.setStartDate(startDate);
     fiscalYear.setEndDate(endDate);

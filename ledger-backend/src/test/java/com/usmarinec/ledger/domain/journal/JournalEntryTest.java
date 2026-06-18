@@ -143,7 +143,7 @@ class JournalEntryTest {
 
   private FiscalYear createFiscalYear(AccountingEntity entity, Integer year) {
     FiscalYear fiscalYear = new FiscalYear();
-    fiscalYear.setEntity(entity);
+    fiscalYear.setAccountingEntity(entity);
     fiscalYear.setYear(year);
     fiscalYear.setStartDate(LocalDate.of(year, 1, 1));
     fiscalYear.setEndDate(LocalDate.of(year, 12, 31));
