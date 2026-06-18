@@ -9,6 +9,7 @@ import com.usmarinec.ledger.repositories.LedgerRepository;
 import com.usmarinec.ledger.responses.SuccessFailureResponse;
 import com.usmarinec.ledger.responses.SuccessFailureResponseUtility;
 import com.usmarinec.ledger.services.LedgerService;
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,8 @@ public abstract class LedgerController<
    * @return SuccessFailureResponse with created record
    */
   @PostMapping("/create")
-  public ResponseEntity<SuccessFailureResponse<ResponseT>> create(@RequestBody CreateReqT request) {
+  public ResponseEntity<SuccessFailureResponse<ResponseT>> create(
+      @Valid @RequestBody CreateReqT request) {
     ResponseT savedDocument = this.service.create(request);
     return SuccessFailureResponseUtility.createSuccessFailureResponse(
         true, "Record created", HttpStatus.CREATED, savedDocument);
@@ -51,7 +53,7 @@ public abstract class LedgerController<
    */
   @PostMapping("/create-list")
   public ResponseEntity<SuccessFailureResponse<ResponseT>> createList(
-      @RequestBody List<CreateReqT> types) {
+      @Valid @RequestBody List<CreateReqT> types) {
     List<ResponseT> savedTypes = this.service.createList(types);
     return SuccessFailureResponseUtility.createSuccessFailureResponse(
         true, "List of records created", HttpStatus.CREATED, savedTypes);
@@ -92,7 +94,7 @@ public abstract class LedgerController<
    */
   @PutMapping("/update/{id}")
   public ResponseEntity<SuccessFailureResponse<ResponseT>> update(
-      @PathVariable UUID id, @RequestBody UpdateReqT request) {
+      @PathVariable UUID id, @Valid @RequestBody UpdateReqT request) {
     if (this.service.existsById(id)) {
       ResponseT updatedType = this.service.update(id, request);
       return SuccessFailureResponseUtility.createSuccessFailureResponse(
