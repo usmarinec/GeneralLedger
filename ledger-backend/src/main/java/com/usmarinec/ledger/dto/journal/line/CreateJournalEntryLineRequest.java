@@ -12,4 +12,4 @@ public record CreateJournalEntryLineRequest(
     @Size(max = 1000) String description,
     @DecimalMin("0.00") BigDecimal debitAmount,
     @DecimalMin("0.00") BigDecimal creditAmount)
-    implements CreateRequest {}
+    implements CreateRequest, JournalEntryLineRequest {}

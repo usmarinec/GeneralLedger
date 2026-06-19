@@ -29,7 +29,7 @@ class JournalEntryTest {
     final LocalDateTime beforePersist = LocalDateTime.now();
 
     JournalEntry journalEntry = new JournalEntry();
-    journalEntry.setEntity(entity);
+    journalEntry.setAccountingEntity(entity);
     journalEntry.setFiscalYear(fiscalYear);
     journalEntry.setEntryDate(LocalDate.of(2026, 1, 15));
     journalEntry.setMemo("Opening journal entry");
@@ -60,7 +60,7 @@ class JournalEntryTest {
     FiscalYear fiscalYear = createFiscalYear(entity, 2026);
 
     JournalEntry journalEntry = new JournalEntry();
-    journalEntry.setEntity(entity);
+    journalEntry.setAccountingEntity(entity);
     journalEntry.setFiscalYear(fiscalYear);
     journalEntry.setEntryDate(LocalDate.of(2026, 1, 15));
     journalEntry.setEntryType(JournalEntryType.ADJUSTING);
@@ -79,7 +79,7 @@ class JournalEntryTest {
 
     assertThat(found).isNotNull();
     assertThat(found.getId()).isEqualTo(journalEntryId);
-    assertThat(found.getEntity().getId()).isEqualTo(entity.getId());
+    assertThat(found.getAccountingEntity().getId()).isEqualTo(entity.getId());
     assertThat(found.getFiscalYear().getId()).isEqualTo(fiscalYear.getId());
     assertThat(found.getEntryDate()).isEqualTo(LocalDate.of(2026, 1, 15));
     assertThat(found.getEntryType()).isEqualTo(JournalEntryType.ADJUSTING);
@@ -96,7 +96,7 @@ class JournalEntryTest {
     LocalDateTime originalCreatedAt = LocalDateTime.of(2026, 1, 1, 12, 30);
 
     JournalEntry journalEntry = new JournalEntry();
-    journalEntry.setEntity(entity);
+    journalEntry.setAccountingEntity(entity);
     journalEntry.setFiscalYear(fiscalYear);
     journalEntry.setEntryDate(LocalDate.of(2026, 1, 15));
     journalEntry.setCreatedAt(originalCreatedAt);

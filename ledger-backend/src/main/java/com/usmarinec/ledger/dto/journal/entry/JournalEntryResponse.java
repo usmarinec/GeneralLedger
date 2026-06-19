@@ -2,6 +2,7 @@ package com.usmarinec.ledger.dto.journal.entry;
 
 import com.usmarinec.ledger.domain.journal.JournalEntryStatus;
 import com.usmarinec.ledger.domain.journal.JournalEntryType;
+import com.usmarinec.ledger.dto.Response;
 import com.usmarinec.ledger.dto.journal.line.JournalEntryLineResponse;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -18,4 +19,5 @@ public record JournalEntryResponse(
     String memo,
     LocalDateTime createdAt,
     LocalDateTime postedAt,
-    List<JournalEntryLineResponse> lines) {}
+    List<JournalEntryLineResponse> lines)
+    implements Response {}

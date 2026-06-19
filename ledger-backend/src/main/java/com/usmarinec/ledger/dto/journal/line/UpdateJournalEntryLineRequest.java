@@ -12,4 +12,4 @@ public record UpdateJournalEntryLineRequest(
     @Size(max = 1000) String description,
     @DecimalMin("0.00") BigDecimal debitAmount,
     @DecimalMin("0.00") BigDecimal creditAmount)
-    implements UpdateRequest {}
+    implements UpdateRequest, JournalEntryLineRequest {}

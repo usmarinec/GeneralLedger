@@ -2,7 +2,7 @@ package com.usmarinec.ledger.dto.journal.entry;
 
 import com.usmarinec.ledger.domain.journal.JournalEntryType;
 import com.usmarinec.ledger.dto.UpdateRequest;
-import com.usmarinec.ledger.dto.journal.line.JournalEntryLineResponse;
+import com.usmarinec.ledger.dto.journal.line.UpdateJournalEntryLineRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -16,5 +16,5 @@ public record UpdateJournalEntryRequest(
     @NotNull LocalDate entryDate,
     @NotNull JournalEntryType entryType,
     @Size(max = 5000) String memo,
-    @NotEmpty List<@Valid JournalEntryLineResponse> lines)
+    @NotEmpty List<@Valid UpdateJournalEntryLineRequest> lines)
     implements UpdateRequest {}
