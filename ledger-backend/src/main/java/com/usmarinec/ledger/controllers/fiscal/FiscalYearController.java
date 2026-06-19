@@ -39,7 +39,7 @@ public class FiscalYearController
   public ResponseEntity<SuccessFailureResponse<FiscalYearResponse>> fetchByAccountingEntityId(
       @PathVariable UUID accountingEntityId) {
     List<FiscalYearResponse> fiscalYearsList =
-        this.service.findByAccountingEntity(accountingEntityId);
+        this.getService().findByAccountingEntity(accountingEntityId);
     return SuccessFailureResponseUtility.createSuccessFailureResponse(
         true, "Record(s) found", HttpStatus.OK, fiscalYearsList);
   }

@@ -24,7 +24,7 @@ class AccountTest {
     AccountingEntity entity = createAccountingEntity("Test Entity");
 
     Account account = new Account();
-    account.setEntity(entity);
+    account.setAccountingEntity(entity);
     account.setCode("1000");
     account.setName("Cash");
     account.setAccountType(AccountType.ASSET);
@@ -66,7 +66,7 @@ class AccountTest {
     assertThat(found.getNormalBalance()).isEqualTo(NormalBalance.DEBIT);
     assertThat(found.getClassification()).isEqualTo(AccountClassification.CURRENT);
     assertThat(found.isActive()).isTrue();
-    assertThat(found.getEntity().getId()).isEqualTo(entity.getId());
+    assertThat(found.getAccountingEntity().getId()).isEqualTo(entity.getId());
   }
 
   @Test
@@ -74,7 +74,7 @@ class AccountTest {
     AccountingEntity entity = createAccountingEntity("Test Entity");
 
     Account account = new Account();
-    account.setEntity(entity);
+    account.setAccountingEntity(entity);
     account.setCode("2000");
     account.setName("Accounts Payable");
     account.setAccountType(AccountType.LIABILITY);
@@ -101,7 +101,7 @@ class AccountTest {
         AccountClassification.CURRENT);
 
     Account duplicate = new Account();
-    duplicate.setEntity(entity);
+    duplicate.setAccountingEntity(entity);
     duplicate.setCode("1000");
     duplicate.setName("Duplicate Cash");
     duplicate.setAccountType(AccountType.ASSET);
@@ -141,7 +141,8 @@ class AccountTest {
     assertThat(firstAccount.getId()).isNotNull();
     assertThat(secondAccount.getId()).isNotNull();
     assertThat(firstAccount.getCode()).isEqualTo(secondAccount.getCode());
-    assertThat(firstAccount.getEntity().getId()).isNotEqualTo(secondAccount.getEntity().getId());
+    assertThat(firstAccount.getAccountingEntity().getId())
+        .isNotEqualTo(secondAccount.getAccountingEntity().getId());
   }
 
   private AccountingEntity createAccountingEntity(String name) {
@@ -162,7 +163,7 @@ class AccountTest {
       NormalBalance normalBalance,
       AccountClassification classification) {
     Account account = new Account();
-    account.setEntity(entity);
+    account.setAccountingEntity(entity);
     account.setCode(code);
     account.setName(name);
     account.setAccountType(accountType);

@@ -29,7 +29,7 @@ import lombok.Setter;
 public class Account extends LedgerDocument {
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @JoinColumn(name = "accounting_entity_id", nullable = false)
-  private AccountingEntity entity;
+  private AccountingEntity accountingEntity;
 
   @Column(nullable = false, length = 50)
   private String code;

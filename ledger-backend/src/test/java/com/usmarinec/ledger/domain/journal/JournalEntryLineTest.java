@@ -293,7 +293,7 @@ class JournalEntryLineTest {
       AccountType accountType,
       NormalBalance normalBalance) {
     Account account = new Account();
-    account.setEntity(entity);
+    account.setAccountingEntity(entity);
     account.setCode(code);
     account.setName(name);
     account.setAccountType(accountType);
