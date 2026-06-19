@@ -37,7 +37,8 @@ public class AccountController
   @GetMapping("/fetch-by-accounting-entity/{accountingEntityId}")
   public ResponseEntity<SuccessFailureResponse<AccountResponse>> fetchByAccountEntityId(
       @PathVariable UUID accountingEntityId) {
-    List<AccountResponse> accountList = this.service.findByAccountingEntity(accountingEntityId);
+    List<AccountResponse> accountList =
+        this.getService().findByAccountingEntity(accountingEntityId);
     return SuccessFailureResponseUtility.createSuccessFailureResponse(
         true, "Account(s) found", HttpStatus.OK, accountList);
   }

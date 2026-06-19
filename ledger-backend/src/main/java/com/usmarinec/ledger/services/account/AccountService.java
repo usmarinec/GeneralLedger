@@ -1,6 +1,8 @@
 package com.usmarinec.ledger.services.account;
 
 import com.usmarinec.ledger.domain.account.Account;
+import com.usmarinec.ledger.domain.account.AccountType;
+import com.usmarinec.ledger.domain.account.NormalBalance;
 import com.usmarinec.ledger.domain.entities.AccountingEntity;
 import com.usmarinec.ledger.dto.account.AccountResponse;
 import com.usmarinec.ledger.dto.account.CreateAccountRequest;
@@ -25,7 +27,7 @@ public class AccountService
   @Override
   protected Account createLedgerEntity(CreateAccountRequest request) {
     AccountingEntity accountingEntity = this.getAccountingEntity(request.accountingEntityId());
-
+    this.validateNormalBalance(request.accountType(), request.normalBalance());
     if (this.repository.existsByAccountingEntity_IdAndCode(
         request.accountingEntityId(), request.code())) {
       throw new ResponseStatusException(
@@ -33,7 +35,7 @@ public class AccountService
     }
 
     Account account = new Account();
-    account.setEntity(accountingEntity);
+    account.setAccountingEntity(accountingEntity);
     account.setCode(request.code());
     account.setName(request.name());
     account.setAccountType(request.accountType());
@@ -45,16 +47,16 @@ public class AccountService
 
   @Override
   protected void updateLedgerEntity(Account ledgerEntity, UpdateAccountRequest request) {
-    AccountingEntity accountingEntity = this.getAccountingEntity(request.accountingEntityId());
+    UUID accountingEntityId = ledgerEntity.getAccountingEntity().getId();
+    this.validateNormalBalance(request.accountType(), request.normalBalance());
     this.repository
-        .findByAccountingEntity_IdAndCode(request.accountingEntityId(), request.code())
+        .findByAccountingEntity_IdAndCode(accountingEntityId, request.code())
         .filter(existing -> !existing.getId().equals(ledgerEntity.getId()))
         .ifPresent(
             existing -> {
               throw new ResponseStatusException(
                   HttpStatus.CONFLICT, "Account already exists for this accounting entity");
             });
-    ledgerEntity.setEntity(accountingEntity);
     ledgerEntity.setCode(request.code());
     ledgerEntity.setName(request.name());
     ledgerEntity.setAccountType(request.accountType());
@@ -67,7 +69,7 @@ public class AccountService
   protected AccountResponse toResponse(Account ledgerEntity) {
     return new AccountResponse(
         ledgerEntity.getId(),
-        ledgerEntity.getEntity().getId(),
+        ledgerEntity.getAccountingEntity().getId(),
         ledgerEntity.getCode(),
         ledgerEntity.getName(),
         ledgerEntity.getAccountType(),
@@ -87,10 +89,38 @@ public class AccountService
         .toList();
   }
 
+  /**
+   * Deactivates an account.
+   *
+   * @param id UUID of account to be deactivated
+   */
+  @Override
+  @Transactional
+  public void delete(UUID id) {
+    Account account = this.getLedgerEntity(id);
+    account.setActive(false);
+    this.repository.save(account);
+  }
+
   private AccountingEntity getAccountingEntity(UUID accountingEntityId) {
     return this.accountingEntityRepository
         .findById(accountingEntityId)
         .orElseThrow(
             () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Accounting entity not found"));
+  }
+
+  private void validateNormalBalance(AccountType accountType, NormalBalance normalBalance) {
+    NormalBalance expectedNormalBalance =
+        switch (accountType) {
+          case ASSET, EXPENSE -> NormalBalance.DEBIT;
+          case LIABILITY, EQUITY, REVENUE -> NormalBalance.CREDIT;
+          default -> throw new IllegalArgumentException("Unexpected value: " + accountType);
+        };
+
+    if (normalBalance != expectedNormalBalance) {
+      throw new ResponseStatusException(
+          HttpStatus.BAD_REQUEST,
+          accountType + " accounts must have a normal balance of " + expectedNormalBalance);
+    }
   }
 }
