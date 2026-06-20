@@ -175,6 +175,8 @@ public class JournalEntryService
 
     journalEntry.clearLines();
 
+    this.repository.flush();
+
     int lineNumber = 1;
 
     for (UpdateJournalEntryLineRequest lineRequest : request.lines()) {
