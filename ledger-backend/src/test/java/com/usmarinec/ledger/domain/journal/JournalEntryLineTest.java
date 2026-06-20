@@ -180,7 +180,7 @@ class JournalEntryLineTest {
         createAccount(entity, "1000", "Cash", AccountType.ASSET, NormalBalance.DEBIT);
 
     JournalEntry journalEntry = new JournalEntry();
-    journalEntry.setEntity(entity);
+    journalEntry.setAccountingEntity(entity);
     journalEntry.setFiscalYear(fiscalYear);
     journalEntry.setEntryDate(LocalDate.of(2026, 1, 15));
 
@@ -308,7 +308,7 @@ class JournalEntryLineTest {
 
   private JournalEntry createJournalEntry(AccountingEntity entity, FiscalYear fiscalYear) {
     JournalEntry journalEntry = new JournalEntry();
-    journalEntry.setEntity(entity);
+    journalEntry.setAccountingEntity(entity);
     journalEntry.setFiscalYear(fiscalYear);
     journalEntry.setEntryDate(LocalDate.of(fiscalYear.getYear(), 1, 15));
 
