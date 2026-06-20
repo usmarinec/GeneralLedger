@@ -1,0 +1,21 @@
+package com.usmarinec.ledger.dto.journal.entry;
+
+import com.usmarinec.ledger.domain.journal.JournalEntryType;
+import com.usmarinec.ledger.dto.CreateRequest;
+import com.usmarinec.ledger.dto.journal.line.CreateJournalEntryLineRequest;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.UUID;
+
+public record CreateJournalEntryRequest(
+    @NotNull UUID accountingEntityId,
+    @NotNull UUID fiscalYearId,
+    @NotNull LocalDate entryDate,
+    @NotNull JournalEntryType entryType,
+    @Size(max = 5000) String memo,
+    @NotEmpty List<@Valid CreateJournalEntryLineRequest> lines)
+    implements CreateRequest {}

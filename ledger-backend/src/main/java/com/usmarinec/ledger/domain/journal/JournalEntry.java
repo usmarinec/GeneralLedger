@@ -30,7 +30,7 @@ import lombok.Setter;
 public class JournalEntry extends LedgerDocument {
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @JoinColumn(name = "accounting_entity_id", nullable = false)
-  private AccountingEntity entity;
+  private AccountingEntity accountingEntity;
 
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @JoinColumn(name = "fiscal_year_id", nullable = false)
@@ -77,5 +77,12 @@ public class JournalEntry extends LedgerDocument {
   public void removeLine(JournalEntryLine line) {
     this.lines.remove(line);
     line.setJournalEntry(null);
+  }
+
+  /** Clears all JournalEntryLines from JournalEntry. */
+  public void clearLines() {
+    for (JournalEntryLine line : new ArrayList<>(this.lines)) {
+      this.removeLine(line);
+    }
   }
 }
