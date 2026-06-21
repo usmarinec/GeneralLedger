@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/AccountingEntity")
+@RequestMapping(AccountingEntityController.API_PATH)
 @Tag(
     name = "Accounting Entities",
     description =
@@ -24,4 +24,6 @@ public class AccountingEntityController
         CreateAccountingEntityRequest,
         UpdateAccountingEntityRequest,
         AccountingEntityResponse,
-        AccountingEntityService> {}
+        AccountingEntityService> {
+  public static final String API_PATH = "/accounting-entity";
+}

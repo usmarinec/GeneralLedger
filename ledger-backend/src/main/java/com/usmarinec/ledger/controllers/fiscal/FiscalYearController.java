@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/FiscalYear")
+@RequestMapping(FiscalYearController.API_PATH)
 @Tag(
     name = "Fiscal Years",
     description =
@@ -38,6 +38,7 @@ public class FiscalYearController
         UpdateFiscalYearRequest,
         FiscalYearResponse,
         FiscalYearService> {
+  public static final String API_PATH = "/fiscal-year";
 
   /**
    * Fetches all FiscalYears by AccountingEntity ID.

@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/account")
+@RequestMapping(AccountController.API_PATH)
 @Tag(name = "Accounts", description = "Manage chart-of-account records for an accounting entity.")
 public class AccountController
     extends LedgerController<
@@ -35,6 +35,8 @@ public class AccountController
         UpdateAccountRequest,
         AccountResponse,
         AccountService> {
+  public static final String API_PATH = "account";
+
   /**
    * Fetches all accounts by AccountingEntity ID.
    *

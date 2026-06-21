@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/journal-entries")
+@RequestMapping(JournalEntryController.API_PATH)
 @Tag(
     name = "Journal Entries",
     description =
@@ -40,6 +40,8 @@ public class JournalEntryController
         UpdateJournalEntryRequest,
         JournalEntryResponse,
         JournalEntryService> {
+  public static final String API_PATH = "/journal-entry";
+
   /**
    * Returns all Journal entries for a given AccountingEntity and FiscalYear.
    *
