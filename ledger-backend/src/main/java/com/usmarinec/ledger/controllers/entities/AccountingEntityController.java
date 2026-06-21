@@ -7,11 +7,16 @@ import com.usmarinec.ledger.dto.entities.CreateAccountingEntityRequest;
 import com.usmarinec.ledger.dto.entities.UpdateAccountingEntityRequest;
 import com.usmarinec.ledger.repositories.entities.AccountingEntityRepository;
 import com.usmarinec.ledger.services.entities.AccountingEntityService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/AccountingEntity")
+@RequestMapping(AccountingEntityController.API_PATH)
+@Tag(
+    name = "Accounting Entities",
+    description =
+        "Manage businesses, organizations, or reporting entities that own accounts, fiscal years, and journal entries.")
 public class AccountingEntityController
     extends LedgerController<
         AccountingEntity,
@@ -19,4 +24,6 @@ public class AccountingEntityController
         CreateAccountingEntityRequest,
         UpdateAccountingEntityRequest,
         AccountingEntityResponse,
-        AccountingEntityService> {}
+        AccountingEntityService> {
+  public static final String API_PATH = "/accounting-entity";
+}

@@ -23,6 +23,6 @@ class AccountingEntityControllerTest {
         AccountingEntityController.class.getAnnotation(RequestMapping.class);
 
     assertNotNull(requestMapping);
-    assertArrayEquals(new String[] {"/AccountingEntity"}, requestMapping.value());
+    assertArrayEquals(new String[] {"/accounting-entity"}, requestMapping.value());
   }
 }

@@ -1,6 +1,7 @@
 package com.usmarinec.ledger.responses;
 
 import com.usmarinec.ledger.dto.Response;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -9,6 +10,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
+@Schema(
+    name = "SuccessFailureResponse",
+    description = "Standard API response wrapper used by ledger endpoints.")
 @Builder
 @Data
 @NoArgsConstructor
@@ -129,9 +133,16 @@ public class SuccessFailureResponse<ResponseT extends Response>
         .build();
   }
 
+  @Schema(description = "Whether the request completed successfully.", example = "true")
   private boolean success;
+
+  @Schema(description = "Human-readable response message.", example = "Record created")
   private String message;
+
+  @Schema(description = "Response items returned by the endpoint.")
   private List<ResponseT> items;
+
+  @Schema(description = "HTTP status reason phrase.", example = "Created")
   private String httpStatus;
 
   @Override
