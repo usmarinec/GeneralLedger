@@ -3,6 +3,7 @@ package com.usmarinec.ledger.dto.account;
 import com.usmarinec.ledger.domain.account.AccountClassification;
 import com.usmarinec.ledger.domain.account.AccountType;
 import com.usmarinec.ledger.domain.account.NormalBalance;
+import com.usmarinec.ledger.dto.DomainResponse;
 import com.usmarinec.ledger.dto.Response;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.UUID;
@@ -24,4 +25,4 @@ public record AccountResponse(
     @Schema(description = "Account classification.", example = "CURRENT")
         AccountClassification classification,
     @Schema(description = "Whether the account is active.", example = "true") boolean active)
-    implements Response {}
+    implements Response, DomainResponse {}

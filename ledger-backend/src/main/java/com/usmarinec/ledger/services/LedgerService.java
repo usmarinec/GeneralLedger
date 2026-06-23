@@ -4,14 +4,13 @@ import com.usmarinec.ledger.domain.LedgerDocument;
 import com.usmarinec.ledger.dto.CreateRequest;
 import com.usmarinec.ledger.dto.Response;
 import com.usmarinec.ledger.dto.UpdateRequest;
+import com.usmarinec.ledger.exception.exceptions.NotFoundException;
 import com.usmarinec.ledger.repositories.LedgerRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 /**
  * Base service for common CRUD operations on ledger domain objects.
@@ -127,8 +126,7 @@ public abstract class LedgerService<
   protected T getLedgerEntity(UUID id) {
     return this.repository
         .findById(id)
-        .orElseThrow(
-            () -> new ResponseStatusException(HttpStatus.NOT_FOUND, id.toString() + " Not found"));
+        .orElseThrow(() -> new NotFoundException(id.toString() + " Not found"));
   }
 
   /**

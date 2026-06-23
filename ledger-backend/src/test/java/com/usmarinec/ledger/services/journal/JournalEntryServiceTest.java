@@ -24,6 +24,7 @@ import com.usmarinec.ledger.dto.journal.entry.JournalEntryResponse;
 import com.usmarinec.ledger.dto.journal.entry.UpdateJournalEntryRequest;
 import com.usmarinec.ledger.dto.journal.line.CreateJournalEntryLineRequest;
 import com.usmarinec.ledger.dto.journal.line.UpdateJournalEntryLineRequest;
+import com.usmarinec.ledger.exception.exceptions.BadRequestException;
 import com.usmarinec.ledger.repositories.account.AccountRepository;
 import com.usmarinec.ledger.repositories.entities.AccountingEntityRepository;
 import com.usmarinec.ledger.repositories.fiscal.FiscalYearRepository;
@@ -39,7 +40,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.util.ReflectionTestUtils;
-import org.springframework.web.server.ResponseStatusException;
 
 class JournalEntryServiceTest {
 
@@ -186,10 +186,10 @@ class JournalEntryServiceTest {
         .thenReturn(Optional.of(accountingEntity));
     when(fiscalYearRepository.findById(fiscalYearId)).thenReturn(Optional.of(fiscalYear));
 
-    ResponseStatusException exception =
-        assertThrows(ResponseStatusException.class, () -> service.create(request));
+    BadRequestException exception =
+        assertThrows(BadRequestException.class, () -> service.create(request));
 
-    assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
+    assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
     verify(journalEntryRepository, never()).save(any(JournalEntry.class));
   }
 
@@ -212,10 +212,10 @@ class JournalEntryServiceTest {
         .thenReturn(Optional.of(accountingEntity));
     when(fiscalYearRepository.findById(fiscalYearId)).thenReturn(Optional.of(fiscalYear));
 
-    ResponseStatusException exception =
-        assertThrows(ResponseStatusException.class, () -> service.create(request));
+    BadRequestException exception =
+        assertThrows(BadRequestException.class, () -> service.create(request));
 
-    assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
+    assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
     verify(journalEntryRepository, never()).save(any(JournalEntry.class));
   }
 
@@ -236,10 +236,10 @@ class JournalEntryServiceTest {
         .thenReturn(Optional.of(accountingEntity));
     when(fiscalYearRepository.findById(fiscalYearId)).thenReturn(Optional.of(fiscalYear));
 
-    ResponseStatusException exception =
-        assertThrows(ResponseStatusException.class, () -> service.create(request));
+    BadRequestException exception =
+        assertThrows(BadRequestException.class, () -> service.create(request));
 
-    assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
+    assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
     verify(journalEntryRepository, never()).save(any(JournalEntry.class));
   }
 
@@ -262,10 +262,10 @@ class JournalEntryServiceTest {
     when(fiscalYearRepository.findById(fiscalYearId)).thenReturn(Optional.of(fiscalYear));
     when(accountRepository.findById(cashAccountId)).thenReturn(Optional.of(inactiveCash));
 
-    ResponseStatusException exception =
-        assertThrows(ResponseStatusException.class, () -> service.create(request));
+    BadRequestException exception =
+        assertThrows(BadRequestException.class, () -> service.create(request));
 
-    assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
+    assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
     verify(journalEntryRepository, never()).save(any(JournalEntry.class));
   }
 
@@ -361,10 +361,10 @@ class JournalEntryServiceTest {
     when(journalEntryRepository.findWithLinesById(journalEntryId))
         .thenReturn(Optional.of(postedJournalEntry));
 
-    ResponseStatusException exception =
-        assertThrows(ResponseStatusException.class, () -> service.update(journalEntryId, request));
+    BadRequestException exception =
+        assertThrows(BadRequestException.class, () -> service.update(journalEntryId, request));
 
-    assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
+    assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
     verify(journalEntryRepository, never()).save(any(JournalEntry.class));
   }
 
@@ -389,10 +389,10 @@ class JournalEntryServiceTest {
     when(journalEntryRepository.findWithLinesById(journalEntryId))
         .thenReturn(Optional.of(voidedJournalEntry));
 
-    ResponseStatusException exception =
-        assertThrows(ResponseStatusException.class, () -> service.update(journalEntryId, request));
+    BadRequestException exception =
+        assertThrows(BadRequestException.class, () -> service.update(journalEntryId, request));
 
-    assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
+    assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
     verify(journalEntryRepository, never()).save(any(JournalEntry.class));
   }
 
@@ -447,10 +447,10 @@ class JournalEntryServiceTest {
     when(journalEntryRepository.findWithLinesById(journalEntryId))
         .thenReturn(Optional.of(journalEntry));
 
-    ResponseStatusException exception =
-        assertThrows(ResponseStatusException.class, () -> service.post(journalEntryId));
+    BadRequestException exception =
+        assertThrows(BadRequestException.class, () -> service.post(journalEntryId));
 
-    assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
+    assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
     verify(journalEntryRepository, never()).save(any(JournalEntry.class));
   }
 
@@ -470,10 +470,10 @@ class JournalEntryServiceTest {
     when(journalEntryRepository.findWithLinesById(journalEntryId))
         .thenReturn(Optional.of(journalEntry));
 
-    ResponseStatusException exception =
-        assertThrows(ResponseStatusException.class, () -> service.post(journalEntryId));
+    BadRequestException exception =
+        assertThrows(BadRequestException.class, () -> service.post(journalEntryId));
 
-    assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
+    assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
     verify(journalEntryRepository, never()).save(any(JournalEntry.class));
   }
 

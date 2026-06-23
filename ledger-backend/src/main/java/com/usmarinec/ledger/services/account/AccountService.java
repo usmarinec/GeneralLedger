@@ -7,16 +7,17 @@ import com.usmarinec.ledger.domain.entities.AccountingEntity;
 import com.usmarinec.ledger.dto.account.AccountResponse;
 import com.usmarinec.ledger.dto.account.CreateAccountRequest;
 import com.usmarinec.ledger.dto.account.UpdateAccountRequest;
+import com.usmarinec.ledger.exception.exceptions.BadRequestException;
+import com.usmarinec.ledger.exception.exceptions.ConflictException;
+import com.usmarinec.ledger.exception.exceptions.NotFoundException;
 import com.usmarinec.ledger.repositories.account.AccountRepository;
 import com.usmarinec.ledger.repositories.entities.AccountingEntityRepository;
 import com.usmarinec.ledger.services.LedgerService;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class AccountService
@@ -30,8 +31,7 @@ public class AccountService
     this.validateNormalBalance(request.accountType(), request.normalBalance());
     if (this.repository.existsByAccountingEntity_IdAndCode(
         request.accountingEntityId(), request.code())) {
-      throw new ResponseStatusException(
-          HttpStatus.CONFLICT, "Account already exists for this accounting entity");
+      throw new ConflictException("Account already exists for this accounting entity");
     }
 
     Account account = new Account();
@@ -54,8 +54,7 @@ public class AccountService
         .filter(existing -> !existing.getId().equals(ledgerEntity.getId()))
         .ifPresent(
             existing -> {
-              throw new ResponseStatusException(
-                  HttpStatus.CONFLICT, "Account already exists for this accounting entity");
+              throw new ConflictException("Account already exists for this accounting entity");
             });
     ledgerEntity.setCode(request.code());
     ledgerEntity.setName(request.name());
@@ -105,8 +104,7 @@ public class AccountService
   private AccountingEntity getAccountingEntity(UUID accountingEntityId) {
     return this.accountingEntityRepository
         .findById(accountingEntityId)
-        .orElseThrow(
-            () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Accounting entity not found"));
+        .orElseThrow(() -> new NotFoundException("Accounting entity not found"));
   }
 
   private void validateNormalBalance(AccountType accountType, NormalBalance normalBalance) {
@@ -114,12 +112,11 @@ public class AccountService
         switch (accountType) {
           case ASSET, EXPENSE -> NormalBalance.DEBIT;
           case LIABILITY, EQUITY, REVENUE -> NormalBalance.CREDIT;
-          default -> throw new IllegalArgumentException("Unexpected value: " + accountType);
+          default -> throw new BadRequestException("Unexpected value: " + accountType);
         };
 
     if (normalBalance != expectedNormalBalance) {
-      throw new ResponseStatusException(
-          HttpStatus.BAD_REQUEST,
+      throw new BadRequestException(
           accountType + " accounts must have a normal balance of " + expectedNormalBalance);
     }
   }

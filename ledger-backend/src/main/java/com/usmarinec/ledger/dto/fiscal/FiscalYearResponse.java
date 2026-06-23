@@ -1,5 +1,6 @@
 package com.usmarinec.ledger.dto.fiscal;
 
+import com.usmarinec.ledger.dto.DomainResponse;
 import com.usmarinec.ledger.dto.Response;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
@@ -24,4 +25,4 @@ public record FiscalYearResponse(
     @Schema(description = "Last date of the fiscal year.", example = "2026-12-31") @NotNull
         LocalDate endDate,
     @Schema(description = "Whether this fiscal year is closed.", example = "false") boolean closed)
-    implements Response {}
+    implements Response, DomainResponse {}

@@ -15,6 +15,9 @@ import com.usmarinec.ledger.domain.fiscal.FiscalYear;
 import com.usmarinec.ledger.dto.fiscal.CreateFiscalYearRequest;
 import com.usmarinec.ledger.dto.fiscal.FiscalYearResponse;
 import com.usmarinec.ledger.dto.fiscal.UpdateFiscalYearRequest;
+import com.usmarinec.ledger.exception.exceptions.BadRequestException;
+import com.usmarinec.ledger.exception.exceptions.ConflictException;
+import com.usmarinec.ledger.exception.exceptions.NotFoundException;
 import com.usmarinec.ledger.repositories.entities.AccountingEntityRepository;
 import com.usmarinec.ledger.repositories.fiscal.FiscalYearRepository;
 import java.time.LocalDate;
@@ -26,7 +29,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.util.ReflectionTestUtils;
-import org.springframework.web.server.ResponseStatusException;
 
 class FiscalYearServiceTest {
 
@@ -104,10 +106,10 @@ class FiscalYearServiceTest {
         new CreateFiscalYearRequest(
             accountingEntityId, 2026, LocalDate.of(2026, 12, 31), LocalDate.of(2026, 1, 1));
 
-    ResponseStatusException exception =
-        assertThrows(ResponseStatusException.class, () -> service.create(request));
+    BadRequestException exception =
+        assertThrows(BadRequestException.class, () -> service.create(request));
 
-    assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
+    assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
 
     verifyNoInteractions(accountingEntityRepository);
     verify(fiscalYearRepository, never()).save(any(FiscalYear.class));
@@ -123,10 +125,10 @@ class FiscalYearServiceTest {
 
     when(accountingEntityRepository.findById(accountingEntityId)).thenReturn(Optional.empty());
 
-    ResponseStatusException exception =
-        assertThrows(ResponseStatusException.class, () -> service.create(request));
+    NotFoundException exception =
+        assertThrows(NotFoundException.class, () -> service.create(request));
 
-    assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
+    assertEquals(HttpStatus.NOT_FOUND, exception.getStatus());
 
     verify(accountingEntityRepository).findById(accountingEntityId);
     verify(fiscalYearRepository, never()).save(any(FiscalYear.class));
@@ -149,10 +151,10 @@ class FiscalYearServiceTest {
     when(fiscalYearRepository.existsByAccountingEntity_IdAndYear(accountingEntityId, 2026))
         .thenReturn(true);
 
-    ResponseStatusException exception =
-        assertThrows(ResponseStatusException.class, () -> service.create(request));
+    ConflictException exception =
+        assertThrows(ConflictException.class, () -> service.create(request));
 
-    assertEquals(HttpStatus.CONFLICT, exception.getStatusCode());
+    assertEquals(HttpStatus.CONFLICT, exception.getStatus());
 
     verify(fiscalYearRepository, never()).save(any(FiscalYear.class));
   }
@@ -230,10 +232,10 @@ class FiscalYearServiceTest {
     when(fiscalYearRepository.findByAccountingEntity_IdAndYear(accountingEntityId, 2026))
         .thenReturn(Optional.of(duplicateFiscalYear));
 
-    ResponseStatusException exception =
-        assertThrows(ResponseStatusException.class, () -> service.update(fiscalYearId, request));
+    ConflictException exception =
+        assertThrows(ConflictException.class, () -> service.update(fiscalYearId, request));
 
-    assertEquals(HttpStatus.CONFLICT, exception.getStatusCode());
+    assertEquals(HttpStatus.CONFLICT, exception.getStatus());
 
     verify(fiscalYearRepository, never()).save(any(FiscalYear.class));
   }
