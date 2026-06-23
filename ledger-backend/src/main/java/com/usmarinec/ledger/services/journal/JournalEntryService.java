@@ -13,6 +13,8 @@ import com.usmarinec.ledger.dto.journal.line.CreateJournalEntryLineRequest;
 import com.usmarinec.ledger.dto.journal.line.JournalEntryLineRequest;
 import com.usmarinec.ledger.dto.journal.line.JournalEntryLineResponse;
 import com.usmarinec.ledger.dto.journal.line.UpdateJournalEntryLineRequest;
+import com.usmarinec.ledger.exception.exceptions.BadRequestException;
+import com.usmarinec.ledger.exception.exceptions.NotFoundException;
 import com.usmarinec.ledger.repositories.account.AccountRepository;
 import com.usmarinec.ledger.repositories.entities.AccountingEntityRepository;
 import com.usmarinec.ledger.repositories.fiscal.FiscalYearRepository;
@@ -24,10 +26,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class JournalEntryService
@@ -69,14 +69,13 @@ public class JournalEntryService
   public JournalEntryResponse post(UUID id) {
     JournalEntry journalEntry = this.getLedgerEntity(id);
     if (journalEntry.getStatus() == JournalEntryStatus.POSTED) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "JournalEntry already posted");
+      throw new BadRequestException("JournalEntry already posted");
     }
     if (journalEntry.getStatus() == JournalEntryStatus.VOIDED) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot post a voided entry");
+      throw new BadRequestException("Cannot post a voided entry");
     }
     if (journalEntry.getFiscalYear().isClosed()) {
-      throw new ResponseStatusException(
-          HttpStatus.BAD_REQUEST, "Cannot post to a closed fiscal year");
+      throw new BadRequestException("Cannot post to a closed fiscal year");
     }
     this.validateBalancedFromEntity(journalEntry);
     journalEntry.setStatus(JournalEntryStatus.POSTED);
@@ -99,8 +98,7 @@ public class JournalEntryService
   protected JournalEntry getLedgerEntity(UUID id) {
     return this.repository
         .findWithLinesById(id)
-        .orElseThrow(
-            () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Journal entry not found"));
+        .orElseThrow(() -> new NotFoundException("Journal entry not found"));
   }
 
   @Override
@@ -129,17 +127,13 @@ public class JournalEntryService
           this.accountRepository
               .findById(lineRequest.accountId())
               .orElseThrow(
-                  () ->
-                      new ResponseStatusException(
-                          HttpStatus.NOT_FOUND, "Account not found: " + lineRequest.accountId()));
+                  () -> new NotFoundException("Account not found: " + lineRequest.accountId()));
       if (!account.getAccountingEntity().getId().equals(accountingEntity.getId())) {
-        throw new ResponseStatusException(
-            HttpStatus.BAD_REQUEST,
+        throw new BadRequestException(
             "Account does not belong to AccountingEntity: " + account.getId());
       }
       if (!account.isActive()) {
-        throw new ResponseStatusException(
-            HttpStatus.BAD_REQUEST, "Cannot use inactive account: " + account.getCode());
+        throw new BadRequestException("Cannot use inactive account: " + account.getCode());
       }
       JournalEntryLine line = this.createLine(lineRequest, accountingEntity, lineNumber++);
       journalEntry.addLine(line);
@@ -150,13 +144,11 @@ public class JournalEntryService
   @Override
   protected void updateLedgerEntity(JournalEntry journalEntry, UpdateJournalEntryRequest request) {
     if (journalEntry.getStatus() == JournalEntryStatus.POSTED) {
-      throw new ResponseStatusException(
-          HttpStatus.BAD_REQUEST, "Cannot update a posted journal entry");
+      throw new BadRequestException("Cannot update a posted journal entry");
     }
 
     if (journalEntry.getStatus() == JournalEntryStatus.VOIDED) {
-      throw new ResponseStatusException(
-          HttpStatus.BAD_REQUEST, "Cannot update a voided journal entry");
+      throw new BadRequestException("Cannot update a voided journal entry");
     }
 
     AccountingEntity accountingEntity = journalEntry.getAccountingEntity();
@@ -218,15 +210,13 @@ public class JournalEntryService
   private void validateEntryDateWithinFiscalYear(LocalDate entryDate, FiscalYear fiscalYear) {
     if (entryDate.isBefore(fiscalYear.getStartDate())
         || entryDate.isAfter(fiscalYear.getEndDate())) {
-      throw new ResponseStatusException(
-          HttpStatus.BAD_REQUEST, "Journal entry date must be within the fiscal year");
+      throw new BadRequestException("Journal entry date must be within the fiscal year");
     }
   }
 
   private void validateLineCount(List<? extends JournalEntryLineRequest> lines) {
     if (lines == null || lines.size() < 2) {
-      throw new ResponseStatusException(
-          HttpStatus.BAD_REQUEST, "Journal entry must have at least two lines");
+      throw new BadRequestException("Journal entry must have at least two lines");
     }
   }
 
@@ -245,8 +235,7 @@ public class JournalEntryService
     }
 
     if (totalDebits.compareTo(totalCredits) != 0) {
-      throw new ResponseStatusException(
-          HttpStatus.BAD_REQUEST, "Journal entry is not balanced. Debits must equal credits.");
+      throw new BadRequestException("Journal entry is not balanced. Debits must equal credits.");
     }
   }
 
@@ -265,8 +254,7 @@ public class JournalEntryService
     }
 
     if (totalDebits.compareTo(totalCredits) != 0) {
-      throw new ResponseStatusException(
-          HttpStatus.BAD_REQUEST, "Journal entry is not balanced. Debits must equal credits.");
+      throw new BadRequestException("Journal entry is not balanced. Debits must equal credits.");
     }
   }
 
@@ -275,8 +263,7 @@ public class JournalEntryService
     boolean hasCredit = credit.compareTo(BigDecimal.ZERO) > 0;
 
     if (hasDebit == hasCredit) {
-      throw new ResponseStatusException(
-          HttpStatus.BAD_REQUEST,
+      throw new BadRequestException(
           "Each journal line must have either a debit or a credit, but not both");
     }
   }
@@ -288,28 +275,25 @@ public class JournalEntryService
   private AccountingEntity getAccountingEntity(UUID accountingEntityId) {
     return this.accountingEntityRepository
         .findById(accountingEntityId)
-        .orElseThrow(
-            () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Accounting entity not found"));
+        .orElseThrow(() -> new NotFoundException("Accounting entity not found"));
   }
 
   private FiscalYear getFiscalYear(UUID fiscalYearId) {
     return this.fiscalYearRepository
         .findById(fiscalYearId)
-        .orElseThrow(
-            () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Fiscal year not found"));
+        .orElseThrow(() -> new NotFoundException("Fiscal year not found"));
   }
 
   private void validateFiscalYearBelongsToAccountingEntity(
       FiscalYear fiscalYear, AccountingEntity accountingEntity) {
     if (!fiscalYear.getAccountingEntity().getId().equals(accountingEntity.getId())) {
-      throw new ResponseStatusException(
-          HttpStatus.BAD_REQUEST, "Fiscal year does not belong to accounting entity");
+      throw new BadRequestException("Fiscal year does not belong to accounting entity");
     }
   }
 
   private void validateFiscalYearIsOpen(FiscalYear fiscalYear) {
     if (fiscalYear.isClosed()) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot use a closed fiscal year");
+      throw new BadRequestException("Cannot use a closed fiscal year");
     }
   }
 
@@ -319,19 +303,15 @@ public class JournalEntryService
         this.accountRepository
             .findById(lineRequest.accountId())
             .orElseThrow(
-                () ->
-                    new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Account not found: " + lineRequest.accountId()));
+                () -> new NotFoundException("Account not found: " + lineRequest.accountId()));
 
     if (!account.getAccountingEntity().getId().equals(accountingEntity.getId())) {
-      throw new ResponseStatusException(
-          HttpStatus.BAD_REQUEST,
+      throw new BadRequestException(
           "Account does not belong to accounting entity: " + account.getId());
     }
 
     if (!account.isActive()) {
-      throw new ResponseStatusException(
-          HttpStatus.BAD_REQUEST, "Cannot use inactive account: " + account.getCode());
+      throw new BadRequestException("Cannot use inactive account: " + account.getCode());
     }
 
     JournalEntryLine line = new JournalEntryLine();

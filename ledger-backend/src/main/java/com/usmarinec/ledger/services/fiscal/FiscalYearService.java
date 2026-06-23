@@ -5,6 +5,9 @@ import com.usmarinec.ledger.domain.fiscal.FiscalYear;
 import com.usmarinec.ledger.dto.fiscal.CreateFiscalYearRequest;
 import com.usmarinec.ledger.dto.fiscal.FiscalYearResponse;
 import com.usmarinec.ledger.dto.fiscal.UpdateFiscalYearRequest;
+import com.usmarinec.ledger.exception.exceptions.BadRequestException;
+import com.usmarinec.ledger.exception.exceptions.ConflictException;
+import com.usmarinec.ledger.exception.exceptions.NotFoundException;
 import com.usmarinec.ledger.repositories.entities.AccountingEntityRepository;
 import com.usmarinec.ledger.repositories.fiscal.FiscalYearRepository;
 import com.usmarinec.ledger.services.LedgerService;
@@ -12,10 +15,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class FiscalYearService
@@ -34,8 +35,7 @@ public class FiscalYearService
 
     if (this.repository.existsByAccountingEntity_IdAndYear(
         request.accountingEntityId(), request.year())) {
-      throw new ResponseStatusException(
-          HttpStatus.CONFLICT, "Fiscal year already exists for this accounting entity");
+      throw new ConflictException("Fiscal year already exists for this accounting entity");
     }
 
     FiscalYear fiscalYear = new FiscalYear();
@@ -57,8 +57,7 @@ public class FiscalYearService
         .filter(existing -> !existing.getId().equals(ledgerEntity.getId()))
         .ifPresent(
             existing -> {
-              throw new ResponseStatusException(
-                  HttpStatus.CONFLICT, "Fiscal year already exists for this accounting entity");
+              throw new ConflictException("Fiscal year already exists for this accounting entity");
             });
     ledgerEntity.setAccountingEntity(accountingEntity);
     ledgerEntity.setYear(request.year());
@@ -93,14 +92,12 @@ public class FiscalYearService
   private AccountingEntity getAccountingEntity(UUID accountingEntityId) {
     return this.accountingEntityRepository
         .findById(accountingEntityId)
-        .orElseThrow(
-            () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Accounting entity not found"));
+        .orElseThrow(() -> new NotFoundException("Accounting entity not found"));
   }
 
   private void validateDateRange(LocalDate startDate, LocalDate endDate) {
     if (startDate.isAfter(endDate)) {
-      throw new ResponseStatusException(
-          HttpStatus.BAD_REQUEST, "Fiscal year start date must be before or equal to end date");
+      throw new BadRequestException("Fiscal year start date must be before or equal to end date");
     }
   }
 }

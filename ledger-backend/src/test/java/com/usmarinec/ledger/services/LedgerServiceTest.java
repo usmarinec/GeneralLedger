@@ -13,6 +13,7 @@ import com.usmarinec.ledger.domain.LedgerDocument;
 import com.usmarinec.ledger.dto.CreateRequest;
 import com.usmarinec.ledger.dto.Response;
 import com.usmarinec.ledger.dto.UpdateRequest;
+import com.usmarinec.ledger.exception.exceptions.NotFoundException;
 import com.usmarinec.ledger.repositories.LedgerRepository;
 import java.util.List;
 import java.util.Optional;
@@ -20,7 +21,6 @@ import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
 
 class LedgerServiceTest {
 
@@ -117,10 +117,9 @@ class LedgerServiceTest {
 
     when(repository.findById(id)).thenReturn(Optional.empty());
 
-    ResponseStatusException exception =
-        assertThrows(ResponseStatusException.class, () -> service.findById(id));
+    NotFoundException exception = assertThrows(NotFoundException.class, () -> service.findById(id));
 
-    assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
+    assertEquals(HttpStatus.NOT_FOUND, exception.getStatus());
   }
 
   @Test
@@ -177,12 +176,11 @@ class LedgerServiceTest {
 
     when(repository.findById(id)).thenReturn(Optional.empty());
 
-    ResponseStatusException exception =
+    NotFoundException exception =
         assertThrows(
-            ResponseStatusException.class,
-            () -> service.update(id, new TestUpdateRequest("New Name")));
+            NotFoundException.class, () -> service.update(id, new TestUpdateRequest("New Name")));
 
-    assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
+    assertEquals(HttpStatus.NOT_FOUND, exception.getStatus());
   }
 
   @Test
@@ -206,10 +204,9 @@ class LedgerServiceTest {
 
     when(repository.findById(id)).thenReturn(Optional.empty());
 
-    ResponseStatusException exception =
-        assertThrows(ResponseStatusException.class, () -> service.delete(id));
+    NotFoundException exception = assertThrows(NotFoundException.class, () -> service.delete(id));
 
-    assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
+    assertEquals(HttpStatus.NOT_FOUND, exception.getStatus());
   }
 
   @Test

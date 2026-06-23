@@ -19,6 +19,9 @@ import com.usmarinec.ledger.domain.entities.AccountingEntity;
 import com.usmarinec.ledger.dto.account.AccountResponse;
 import com.usmarinec.ledger.dto.account.CreateAccountRequest;
 import com.usmarinec.ledger.dto.account.UpdateAccountRequest;
+import com.usmarinec.ledger.exception.exceptions.BadRequestException;
+import com.usmarinec.ledger.exception.exceptions.ConflictException;
+import com.usmarinec.ledger.exception.exceptions.NotFoundException;
 import com.usmarinec.ledger.repositories.account.AccountRepository;
 import com.usmarinec.ledger.repositories.entities.AccountingEntityRepository;
 import java.util.List;
@@ -29,7 +32,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.util.ReflectionTestUtils;
-import org.springframework.web.server.ResponseStatusException;
 
 class AccountServiceTest {
 
@@ -123,10 +125,10 @@ class AccountServiceTest {
 
     when(accountingEntityRepository.findById(accountingEntityId)).thenReturn(Optional.empty());
 
-    ResponseStatusException exception =
-        assertThrows(ResponseStatusException.class, () -> service.create(request));
+    NotFoundException exception =
+        assertThrows(NotFoundException.class, () -> service.create(request));
 
-    assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
+    assertEquals(HttpStatus.NOT_FOUND, exception.getStatus());
 
     verify(accountingEntityRepository).findById(accountingEntityId);
     verify(accountRepository, never()).save(any(Account.class));
@@ -154,10 +156,10 @@ class AccountServiceTest {
     when(accountRepository.existsByAccountingEntity_IdAndCode(accountingEntityId, "1000"))
         .thenReturn(true);
 
-    ResponseStatusException exception =
-        assertThrows(ResponseStatusException.class, () -> service.create(request));
+    ConflictException exception =
+        assertThrows(ConflictException.class, () -> service.create(request));
 
-    assertEquals(HttpStatus.CONFLICT, exception.getStatusCode());
+    assertEquals(HttpStatus.CONFLICT, exception.getStatus());
 
     verify(accountRepository, never()).save(any(Account.class));
   }
@@ -248,10 +250,10 @@ class AccountServiceTest {
     when(accountRepository.findByAccountingEntity_IdAndCode(accountingEntityId, "1010"))
         .thenReturn(Optional.of(duplicateAccount));
 
-    ResponseStatusException exception =
-        assertThrows(ResponseStatusException.class, () -> service.update(accountId, request));
+    ConflictException exception =
+        assertThrows(ConflictException.class, () -> service.update(accountId, request));
 
-    assertEquals(HttpStatus.CONFLICT, exception.getStatusCode());
+    assertEquals(HttpStatus.CONFLICT, exception.getStatus());
 
     verify(accountRepository, never()).save(any(Account.class));
   }
@@ -316,10 +318,10 @@ class AccountServiceTest {
 
     when(accountRepository.findById(accountId)).thenReturn(Optional.empty());
 
-    ResponseStatusException exception =
-        assertThrows(ResponseStatusException.class, () -> service.update(accountId, request));
+    NotFoundException exception =
+        assertThrows(NotFoundException.class, () -> service.update(accountId, request));
 
-    assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
+    assertEquals(HttpStatus.NOT_FOUND, exception.getStatus());
 
     verifyNoInteractions(accountingEntityRepository);
     verify(accountRepository, never()).save(any(Account.class));
@@ -428,10 +430,10 @@ class AccountServiceTest {
     when(accountingEntityRepository.findById(accountingEntityId))
         .thenReturn(Optional.of(accountingEntity));
 
-    ResponseStatusException exception =
-        assertThrows(ResponseStatusException.class, () -> service.create(request));
+    BadRequestException exception =
+        assertThrows(BadRequestException.class, () -> service.create(request));
 
-    assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
+    assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
 
     verify(accountRepository, never()).save(any(Account.class));
   }
@@ -455,10 +457,10 @@ class AccountServiceTest {
     when(accountingEntityRepository.findById(accountingEntityId))
         .thenReturn(Optional.of(accountingEntity));
 
-    ResponseStatusException exception =
-        assertThrows(ResponseStatusException.class, () -> service.create(request));
+    BadRequestException exception =
+        assertThrows(BadRequestException.class, () -> service.create(request));
 
-    assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
+    assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
 
     verify(accountRepository, never()).save(any(Account.class));
   }
