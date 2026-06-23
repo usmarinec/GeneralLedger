@@ -2,8 +2,8 @@ package com.usmarinec.ledger.exceptions;
 
 import org.springframework.http.HttpStatus;
 
-public class NotFoundException extends LedgerException {
-  public NotFoundException(String message) {
+public class BadRequestException extends LedgerException {
+  public BadRequestException(String message) {
     super(HttpStatus.NOT_FOUND, message);
   }
 }
