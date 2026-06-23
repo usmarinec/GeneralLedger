@@ -4,7 +4,6 @@ import com.usmarinec.ledger.domain.LedgerDocument;
 import com.usmarinec.ledger.dto.CreateRequest;
 import com.usmarinec.ledger.dto.Response;
 import com.usmarinec.ledger.dto.UpdateRequest;
-import com.usmarinec.ledger.exception.exceptions.NotFoundException;
 import com.usmarinec.ledger.repositories.LedgerRepository;
 import com.usmarinec.ledger.responses.SuccessFailureResponse;
 import com.usmarinec.ledger.responses.SuccessFailureResponseUtility;
@@ -153,13 +152,9 @@ public abstract class LedgerController<
           @PathVariable
           UUID id,
       @Valid @RequestBody UpdateReqT request) {
-    if (this.service.existsById(id)) {
-      ResponseT updatedType = this.service.update(id, request);
-      return SuccessFailureResponseUtility.createSuccessFailureResponse(
-          true, "Record: '" + id + "' updated", HttpStatus.OK, updatedType);
-    } else {
-      throw new NotFoundException("Resource with id: '" + id + "' not found");
-    }
+    ResponseT updatedType = this.service.update(id, request);
+    return SuccessFailureResponseUtility.createSuccessFailureResponse(
+        true, "Record: '" + id + "' updated", HttpStatus.OK, updatedType);
   }
 
   /**
@@ -181,13 +176,9 @@ public abstract class LedgerController<
               example = "550e8400-e29b-41d4-a716-446655440000")
           @PathVariable
           UUID id) {
-    if (this.service.existsById(id)) {
-      this.service.delete(id);
-      return SuccessFailureResponseUtility.createSuccessFailureResponse(
-          true, "Record deleted with id: '" + id + "'", HttpStatus.OK);
-    } else {
-      throw new NotFoundException("Resource with id: '" + id + "' not found");
-    }
+    this.service.delete(id);
+    return SuccessFailureResponseUtility.createSuccessFailureResponse(
+        true, "Record deleted with id: '" + id + "'", HttpStatus.OK);
   }
 
   protected S getService() {

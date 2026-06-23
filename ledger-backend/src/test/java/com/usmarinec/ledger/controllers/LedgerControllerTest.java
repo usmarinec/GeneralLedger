@@ -3,6 +3,7 @@ package com.usmarinec.ledger.controllers;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -26,6 +27,7 @@ class LedgerControllerTest {
 
   private TestLedgerService service;
   private TestLedgerController controller;
+  private LedgerRepository repository;
 
   @BeforeEach
   void setUp() {
@@ -145,7 +147,6 @@ class LedgerControllerTest {
     TestUpdateRequest request = new TestUpdateRequest("Updated Entity");
     TestResponse updatedResponse = new TestResponse(id, "Updated Entity");
 
-    when(service.existsById(id)).thenReturn(true);
     when(service.update(id, request)).thenReturn(updatedResponse);
 
     ResponseEntity<SuccessFailureResponse<TestResponse>> responseEntity =
@@ -162,7 +163,6 @@ class LedgerControllerTest {
     assertEquals(1, body.getItems().size());
     assertEquals(updatedResponse, body.getItems().get(0));
 
-    verify(service).existsById(id);
     verify(service).update(id, request);
   }
 
@@ -172,21 +172,20 @@ class LedgerControllerTest {
 
     TestUpdateRequest request = new TestUpdateRequest("Updated Entity");
 
-    when(service.existsById(id)).thenReturn(false);
+    when(service.update(id, request))
+        .thenThrow(new NotFoundException("Resource with id: '" + id + "' not found"));
 
     NotFoundException exception =
         assertThrows(NotFoundException.class, () -> controller.update(id, request));
 
     assertEquals("Resource with id: '" + id + "' not found", exception.getMessage());
 
-    verify(service).existsById(id);
+    verify(service).update(id, request);
   }
 
   @Test
   void delete_whenRecordExists_deletesRecordAndReturnsOkResponse() {
     UUID id = UUID.randomUUID();
-
-    when(service.existsById(id)).thenReturn(true);
 
     ResponseEntity<SuccessFailureResponse<TestResponse>> responseEntity = controller.delete(id);
 
@@ -199,7 +198,6 @@ class LedgerControllerTest {
     assertEquals("Record deleted with id: '" + id + "'", body.getMessage());
     assertEquals("OK", body.getHttpStatus());
 
-    verify(service).existsById(id);
     verify(service).delete(id);
   }
 
@@ -207,14 +205,16 @@ class LedgerControllerTest {
   void delete_whenRecordDoesNotExist_throwsNotFoundException() {
     UUID id = UUID.randomUUID();
 
-    when(service.existsById(id)).thenReturn(false);
+    doThrow(new NotFoundException("Resource with id: '" + id + "' not found"))
+        .when(service)
+        .delete(id);
 
     NotFoundException exception =
         assertThrows(NotFoundException.class, () -> controller.delete(id));
 
     assertEquals("Resource with id: '" + id + "' not found", exception.getMessage());
 
-    verify(service).existsById(id);
+    verify(service).delete(id);
   }
 
   private static class TestDocument extends LedgerDocument {}
