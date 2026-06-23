@@ -1,5 +1,6 @@
 package com.usmarinec.ledger.dto.journal.line;
 
+import com.usmarinec.ledger.dto.DomainResponse;
 import com.usmarinec.ledger.dto.Response;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.math.BigDecimal;
@@ -32,4 +33,4 @@ public record JournalEntryLineResponse(
         String description,
     @Schema(description = "Debit amount for this line.", example = "100.00") BigDecimal debitAmount,
     @Schema(description = "Credit amount for this line.", example = "0.00") BigDecimal creditAmount)
-    implements Response {}
+    implements Response, DomainResponse {}

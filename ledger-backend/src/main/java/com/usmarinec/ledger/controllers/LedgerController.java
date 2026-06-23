@@ -4,7 +4,7 @@ import com.usmarinec.ledger.domain.LedgerDocument;
 import com.usmarinec.ledger.dto.CreateRequest;
 import com.usmarinec.ledger.dto.Response;
 import com.usmarinec.ledger.dto.UpdateRequest;
-import com.usmarinec.ledger.exceptions.NotFoundException;
+import com.usmarinec.ledger.exception.exceptions.NotFoundException;
 import com.usmarinec.ledger.repositories.LedgerRepository;
 import com.usmarinec.ledger.responses.SuccessFailureResponse;
 import com.usmarinec.ledger.responses.SuccessFailureResponseUtility;

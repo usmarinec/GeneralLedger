@@ -2,6 +2,7 @@ package com.usmarinec.ledger.dto.journal.entry;
 
 import com.usmarinec.ledger.domain.journal.JournalEntryStatus;
 import com.usmarinec.ledger.domain.journal.JournalEntryType;
+import com.usmarinec.ledger.dto.DomainResponse;
 import com.usmarinec.ledger.dto.Response;
 import com.usmarinec.ledger.dto.journal.line.JournalEntryLineResponse;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -37,4 +38,4 @@ public record JournalEntryResponse(
             example = "2026-06-20T15:00:00")
         LocalDateTime postedAt,
     @Schema(description = "Journal entry lines.") List<JournalEntryLineResponse> lines)
-    implements Response {}
+    implements Response, DomainResponse {}

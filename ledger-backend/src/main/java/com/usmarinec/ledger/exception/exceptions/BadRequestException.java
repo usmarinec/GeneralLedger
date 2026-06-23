@@ -1,4 +1,4 @@
-package com.usmarinec.ledger.exceptions;
+package com.usmarinec.ledger.exception.exceptions;
 
 import org.springframework.http.HttpStatus;
 

@@ -1,5 +1,6 @@
 package com.usmarinec.ledger.dto.entities;
 
+import com.usmarinec.ledger.dto.DomainResponse;
 import com.usmarinec.ledger.dto.Response;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
@@ -19,4 +20,4 @@ public record AccountingEntityResponse(
             description = "Date and time when the accounting entity was created.",
             example = "2026-06-20T14:30:00")
         LocalDateTime createdAt)
-    implements Response {}
+    implements Response, DomainResponse {}

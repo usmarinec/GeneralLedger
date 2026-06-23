@@ -1,4 +1,4 @@
-package com.usmarinec.ledger.exceptions;
+package com.usmarinec.ledger.exception.exceptions;
 
 import org.springframework.http.HttpStatus;
 
@@ -10,7 +10,7 @@ public abstract class LedgerException extends RuntimeException {
     this.status = status;
   }
 
-  protected LedgerException(HttpStatus status, String message, Throable cause) {
+  protected LedgerException(HttpStatus status, String message, Throwable cause) {
     super(message, cause);
     this.status = status;
   }
