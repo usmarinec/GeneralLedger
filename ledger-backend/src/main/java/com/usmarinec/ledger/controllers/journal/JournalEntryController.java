@@ -40,7 +40,7 @@ public class JournalEntryController
         UpdateJournalEntryRequest,
         JournalEntryResponse,
         JournalEntryService> {
-  public static final String API_PATH = "/journal-entry";
+  public static final String API_PATH = "/journal-entries";
 
   /**
    * Returns all Journal entries for a given AccountingEntity and FiscalYear.
