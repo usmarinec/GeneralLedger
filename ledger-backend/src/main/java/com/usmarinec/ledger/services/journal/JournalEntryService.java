@@ -123,18 +123,6 @@ public class JournalEntryService
     int lineNumber = 1;
 
     for (CreateJournalEntryLineRequest lineRequest : request.lines()) {
-      Account account =
-          this.accountRepository
-              .findById(lineRequest.accountId())
-              .orElseThrow(
-                  () -> new NotFoundException("Account not found: " + lineRequest.accountId()));
-      if (!account.getAccountingEntity().getId().equals(accountingEntity.getId())) {
-        throw new BadRequestException(
-            "Account does not belong to AccountingEntity: " + account.getId());
-      }
-      if (!account.isActive()) {
-        throw new BadRequestException("Cannot use inactive account: " + account.getCode());
-      }
       JournalEntryLine line = this.createLine(lineRequest, accountingEntity, lineNumber++);
       journalEntry.addLine(line);
     }
