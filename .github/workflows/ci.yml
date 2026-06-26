@@ -2,9 +2,6 @@ name: CI
 
 on:
   pull_request:
-    branches:
-      - main
-      - develop
     types:
       - opened
       - synchronize
@@ -136,5 +133,5 @@ jobs:
       - name: Set up project
         uses: ./.github/actions/setup-gradle-project
       
-      - name: domain tests
+      - name: backend tests
         run: ./gradlew :ledger-backend:test

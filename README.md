@@ -21,6 +21,11 @@ eval "$(jenv init -)"
 2. ```sudo chmod +x /usr/local/bin/docker-compose```
 3. ```docker login```
 
+### Instance IP tables
+1. ```sudo iptables -L```
+2. ```sudo iptables -A INPUT -p tcp --dport YOUR_PORT_NUMBER -j ACCEPT```
+3. Also edit EC2 instance's security group inbound rules and allow traffic on given port number
+
 ### Gradle
 1. ```wget https://services.gradle.org/distributions/gradle-9.5.1-bin.zip```
 2. ```sudo unzip gradle-9.5.1-bin.zip -d /opt/gradle```
@@ -73,3 +78,19 @@ fi
 12. ```jenv global 21```
 13. ```jenv enable-plugin export```
 14. ```Source ~/.bashrc```
+
+### C9 Launch configurations
+to enable debugging, edit .c9/launch.json:
+```
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Debug (Attach)",
+            "request": "attach",
+            "hostName": "localhost",
+            "port": 5005
+        }
+    ]
+}
+```
