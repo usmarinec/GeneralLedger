@@ -133,5 +133,5 @@ jobs:
       - name: Set up project
         uses: ./.github/actions/setup-gradle-project
       
-      - name: context loads
+      - name: backend tests
         run: ./gradlew :ledger-backend:test
