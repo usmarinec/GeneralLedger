@@ -25,5 +25,5 @@ public class AccountingEntityController
         UpdateAccountingEntityRequest,
         AccountingEntityResponse,
         AccountingEntityService> {
-  public static final String API_PATH = "/accounting-entity";
+  public static final String API_PATH = "/accounting-entities";
 }

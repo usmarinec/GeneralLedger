@@ -35,7 +35,7 @@ public class AccountController
         UpdateAccountRequest,
         AccountResponse,
         AccountService> {
-  public static final String API_PATH = "account";
+  public static final String API_PATH = "/accounts";
 
   /**
    * Fetches all accounts by AccountingEntity ID.

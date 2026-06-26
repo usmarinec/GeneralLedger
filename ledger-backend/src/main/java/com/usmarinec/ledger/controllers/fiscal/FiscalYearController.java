@@ -38,7 +38,7 @@ public class FiscalYearController
         UpdateFiscalYearRequest,
         FiscalYearResponse,
         FiscalYearService> {
-  public static final String API_PATH = "/fiscal-year";
+  public static final String API_PATH = "/fiscal-years";
 
   /**
    * Fetches all FiscalYears by AccountingEntity ID.
