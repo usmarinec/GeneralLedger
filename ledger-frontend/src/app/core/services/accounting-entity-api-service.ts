@@ -1,5 +1,3 @@
-// src/app/core/services/accounting-entity-api.ts
-
 import { Service } from '@angular/core';
 
 import { CrudApi } from '../api/crud-api';

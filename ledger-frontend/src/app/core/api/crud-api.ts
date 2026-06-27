@@ -1,5 +1,3 @@
-// src/app/core/api/crud-api.ts
-
 import { HttpClient } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { map, Observable } from 'rxjs';

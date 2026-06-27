@@ -1,5 +1,3 @@
-// src/app/core/services/account-api.ts
-
 import { Service } from '@angular/core';
 import { map, Observable } from 'rxjs';
 

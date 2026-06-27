@@ -1,5 +1,3 @@
-// src/app/core/services/journal-entry-api.ts
-
 import { HttpParams } from '@angular/common/http';
 import { Service } from '@angular/core';
 import { map, Observable } from 'rxjs';
