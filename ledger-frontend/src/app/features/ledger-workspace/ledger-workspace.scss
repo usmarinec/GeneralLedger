@@ -1,0 +1,115 @@
+.page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: system-ui, sans-serif;
+}
+
+.page-header {
+  margin-bottom: 1.5rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.card {
+  border: 1px solid #ddd;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  background: #fff;
+}
+
+.wide {
+  grid-column: 1 / -1;
+}
+
+form {
+  display: grid;
+  gap: 0.75rem;
+}
+
+label {
+  display: grid;
+  gap: 0.25rem;
+  font-weight: 600;
+}
+
+input,
+select,
+button {
+  padding: 0.5rem;
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+th,
+td {
+  border-bottom: 1px solid #eee;
+  padding: 0.5rem;
+  text-align: left;
+}
+
+.amount {
+  text-align: right;
+}
+
+.line-row,
+.form-row,
+.button-row {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.line-row {
+  grid-template-columns: 2fr 2fr 1fr 1fr auto;
+  margin-bottom: 0.5rem;
+}
+
+.form-row {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.button-row {
+  grid-template-columns: max-content max-content;
+}
+
+.alert {
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.success {
+  background: #e9f8ec;
+  border: 1px solid #b7e1c0;
+}
+
+.error {
+  background: #fdecec;
+  border: 1px solid #efb5b5;
+}
+
+.good {
+  color: #166534;
+}
+
+.bad {
+  color: #991b1b;
+}
