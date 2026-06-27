@@ -6,4 +6,4 @@ import { Component } from "@angular/core";
   templateUrl: "./ledger-workspace.html",
   styleUrl: "./ledger-workspace.scss",
 })
-export class LedgerWorkspace {}
+export class LedgerWorkspaceComponent {}
