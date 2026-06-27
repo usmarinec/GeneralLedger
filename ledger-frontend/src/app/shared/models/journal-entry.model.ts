@@ -1,5 +1,5 @@
-export type JournalEntryType = 'STANDARD' | 'ADJUSTING' | 'CLOSING';
-export type JournalEntryStatus = 'DRAFT' | 'POSTED' | 'VOIDED';
+export type JournalEntryType = "STANDARD" | "ADJUSTING" | "CLOSING";
+export type JournalEntryStatus = "DRAFT" | "POSTED" | "VOIDED";
 
 export interface JournalEntryLineResponse {
   id: string;

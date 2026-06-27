@@ -1,6 +1,11 @@
-export type AccountType = 'ASSET' | 'LIABILITY' | 'EQUITY' | 'REVENUE' | 'EXPENSE';
-export type NormalBalance = 'DEBIT' | 'CREDIT';
-export type AccountClassification = 'CURRENT' | 'NON_CURRENT' | 'NONE';
+export type AccountType =
+  | "ASSET"
+  | "LIABILITY"
+  | "EQUITY"
+  | "REVENUE"
+  | "EXPENSE";
+export type NormalBalance = "DEBIT" | "CREDIT";
+export type AccountClassification = "CURRENT" | "NON_CURRENT" | "NONE";
 
 export interface AccountResponse {
   id: string;
