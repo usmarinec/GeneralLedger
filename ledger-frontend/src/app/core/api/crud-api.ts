@@ -1,8 +1,8 @@
-import { HttpClient } from '@angular/common/http';
-import { inject } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { HttpClient } from "@angular/common/http";
+import { inject } from "@angular/core";
+import { map, Observable } from "rxjs";
 
-import { SuccessFailureResponse } from './api-response.model';
+import { SuccessFailureResponse } from "./api-response.model";
 
 export abstract class CrudApi<ResponseT, CreateRequestT, UpdateRequestT> {
   protected readonly http = inject(HttpClient);
@@ -11,13 +11,19 @@ export abstract class CrudApi<ResponseT, CreateRequestT, UpdateRequestT> {
 
   create(request: CreateRequestT): Observable<ResponseT> {
     return this.http
-      .post<SuccessFailureResponse<ResponseT>>(`${this.baseUrl}/create`, request)
+      .post<SuccessFailureResponse<ResponseT>>(
+        `${this.baseUrl}/create`,
+        request
+      )
       .pipe(map((response) => this.unwrapOne(response)));
   }
 
   createList(requests: CreateRequestT[]): Observable<ResponseT[]> {
     return this.http
-      .post<SuccessFailureResponse<ResponseT>>(`${this.baseUrl}/create-list`, requests)
+      .post<SuccessFailureResponse<ResponseT>>(
+        `${this.baseUrl}/create-list`,
+        requests
+      )
       .pipe(map((response) => response.items));
   }
 
@@ -35,7 +41,10 @@ export abstract class CrudApi<ResponseT, CreateRequestT, UpdateRequestT> {
 
   update(id: string, request: UpdateRequestT): Observable<ResponseT> {
     return this.http
-      .put<SuccessFailureResponse<ResponseT>>(`${this.baseUrl}/update/${id}`, request)
+      .put<SuccessFailureResponse<ResponseT>>(
+        `${this.baseUrl}/update/${id}`,
+        request
+      )
       .pipe(map((response) => this.unwrapOne(response)));
   }
 
@@ -47,7 +56,7 @@ export abstract class CrudApi<ResponseT, CreateRequestT, UpdateRequestT> {
 
   protected unwrapOne(response: SuccessFailureResponse<ResponseT>): ResponseT {
     if (!response.items?.length) {
-      throw new Error('Expected response to contain one item.');
+      throw new Error("Expected response to contain one item.");
     }
 
     return response.items[0];

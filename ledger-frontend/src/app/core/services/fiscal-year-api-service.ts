@@ -1,13 +1,13 @@
-import { Service } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { Service } from "@angular/core";
+import { map, Observable } from "rxjs";
 
-import { CrudApi } from '../api/crud-api';
-import { SuccessFailureResponse } from '../api/api-response.model';
+import { CrudApi } from "../api/crud-api";
+import { SuccessFailureResponse } from "../api/api-response.model";
 import {
   CreateFiscalYearRequest,
   FiscalYearResponse,
-  UpdateFiscalYearRequest
-} from '../../shared/models/fiscal-year.model';
+  UpdateFiscalYearRequest,
+} from "../../shared/models/fiscal-year.model";
 
 @Service()
 export class FiscalYearApiService extends CrudApi<
@@ -15,9 +15,11 @@ export class FiscalYearApiService extends CrudApi<
   CreateFiscalYearRequest,
   UpdateFiscalYearRequest
 > {
-  protected override readonly baseUrl = '/api/fiscal-years';
+  protected override readonly baseUrl = "/api/fiscal-years";
 
-  findByAccountingEntity(accountingEntityId: string): Observable<FiscalYearResponse[]> {
+  findByAccountingEntity(
+    accountingEntityId: string
+  ): Observable<FiscalYearResponse[]> {
     return this.http
       .get<SuccessFailureResponse<FiscalYearResponse>>(
         `${this.baseUrl}/fetch-by-accounting-entity/${accountingEntityId}`

@@ -1,4 +1,4 @@
-import { AccountType, NormalBalance } from './account.model';
+import { AccountType, NormalBalance } from "./account.model";
 
 export interface TrialBalanceLineResponse {
   accountId: string;

@@ -1,7 +1,7 @@
-import { CrudApi } from './crud-api';
+import { CrudApi } from "./crud-api";
 
-describe('CrudApi', () => {
-  it('should create an instance', () => {
+describe("CrudApi", () => {
+  it("should create an instance", () => {
     expect(new CrudApi()).toBeTruthy();
   });
 });

@@ -1,8 +1,8 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed } from "@angular/core/testing";
 
-import { FiscalYearApiService } from './fiscal-year-api-service';
+import { FiscalYearApiService } from "./fiscal-year-api-service";
 
-describe('FiscalYearApiService', () => {
+describe("FiscalYearApiService", () => {
   let service: FiscalYearApiService;
 
   beforeEach(() => {
@@ -10,7 +10,7 @@ describe('FiscalYearApiService', () => {
     service = TestBed.inject(FiscalYearApiService);
   });
 
-  it('should be created', () => {
+  it("should be created", () => {
     expect(service).toBeTruthy();
   });
 });
