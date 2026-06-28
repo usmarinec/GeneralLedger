@@ -1,1 +1,21 @@
-<p>app-shell works!</p>
+<div class="shell">
+  <aside class="sidebar">
+    <div class="brand">
+      <h1>Ledger</h1>
+      <p>General Ledger</p>
+    </div>
+
+    <nav class="nav">
+      <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+      <a routerLink="/accounting-entities" routerLinkActive="active">Accounting Entities</a>
+      <a routerLink="/fiscal-years" routerLinkActive="active">Fiscal Years</a>
+      <a routerLink="/accounts" routerLinkActive="active">Accounts</a>
+      <a routerLink="/journal-entries" routerLinkActive="active">Journal Entries</a>
+      <a routerLink="/trial-balances" routerLinkActive="active">Trial Balances</a>
+    </nav>
+  </aside>
+
+  <main class="main">
+    <router-outlet />
+  </main>
+</div>
