@@ -1,0 +1,78 @@
+<section class="page-card">
+  <header class="page-header">
+    <div>
+      <h1>Accounting Entities</h1>
+      <p>Create, select, edit, and delete accounting entities.</p>
+    </div>
+
+    <button type="button" class="secondary" (click)="loadAccountingEntities()">Refresh</button>
+  </header>
+
+  @if (message()) {
+    <div class="alert success">{{ message() }}</div>
+  }
+
+  @if (error()) {
+    <div class="alert error">{{ error() }}</div>
+  }
+
+  <section class="form-section">
+    <h2>{{ editingEntityId() ? 'Edit Accounting Entity' : 'Create Accounting Entity' }}</h2>
+
+    <form [formGroup]="accountingEntityForm" (ngSubmit)="saveAccountingEntity()">
+      <label>
+        Name
+        <input type="text" formControlName="name" placeholder="Example Company" />
+      </label>
+
+      <div class="button-row">
+        <button type="submit" [disabled]="accountingEntityForm.invalid">
+          {{ editingEntityId() ? 'Update Entity' : 'Create Entity' }}
+        </button>
+
+        @if (editingEntityId()) {
+          <button type="button" class="secondary" (click)="cancelEdit()">Cancel</button>
+        }
+      </div>
+    </form>
+  </section>
+
+  <section>
+    <h2>Existing Accounting Entities</h2>
+
+    @if (accountingEntities().length === 0) {
+      <p class="empty">No accounting entities found.</p>
+    } @else {
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Created</th>
+            <th>Selected</th>
+            <th class="actions">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (entity of accountingEntities(); track entity.id) {
+            <tr>
+              <td>{{ entity.name }}</td>
+              <td>{{ entity.createdAt }}</td>
+              <td>
+                @if (context.selectedAccountingEntityId() === entity.id) {
+                  <span class="badge">Selected</span>
+                }
+              </td>
+              <td class="actions">
+                <button type="button" (click)="selectAccountingEntity(entity)">Select</button>
+                <button type="button" class="secondary" (click)="startEdit(entity)">Edit</button>
+                <button type="button" class="danger" (click)="deleteAccountingEntity(entity)">
+                  Delete
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </section>
+</section>
