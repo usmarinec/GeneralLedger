@@ -1,0 +1,49 @@
+.shell {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  background: #f6f7f9;
+}
+
+.sidebar {
+  background: #111827;
+  color: white;
+  padding: 1.5rem;
+}
+
+.brand {
+  margin-bottom: 2rem;
+
+  h1 {
+    margin: 0;
+    font-size: 1.5rem;
+  }
+
+  p {
+    margin: 0.25rem 0 0;
+    color: #9ca3af;
+  }
+}
+
+.nav {
+  display: grid;
+  gap: 0.5rem;
+
+  a {
+    color: #d1d5db;
+    text-decoration: none;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+  }
+
+  a:hover,
+  a.active {
+    background: #374151;
+    color: white;
+  }
+}
+
+.main {
+  padding: 2rem;
+  overflow: auto;
+}
