@@ -1,0 +1,100 @@
+<app-ledger-context-selector />
+
+<section class="page-card">
+  <header class="page-header">
+    <div>
+      <h1>Trial Balances</h1>
+      <p>Generate trial balance reports from posted journal entry activity.</p>
+    </div>
+
+    <button
+      type="button"
+      [disabled]="!context.hasFullContext()"
+      (click)="generateUnadjustedTrialBalance()"
+    >
+      Generate Unadjusted Trial Balance
+    </button>
+  </header>
+
+  @if (message()) {
+    <div class="alert success">{{ message() }}</div>
+  }
+
+  @if (error()) {
+    <div class="alert error">{{ error() }}</div>
+  }
+
+  @if (!context.hasFullContext()) {
+    <p class="empty">Select an accounting entity and fiscal year before generating reports.</p>
+  }
+
+  @if (trialBalance(); as tb) {
+    <section class="summary">
+      <div class="summary-card">
+        <span class="label">Type</span>
+        <strong>{{ tb.trialBalanceType }}</strong>
+      </div>
+
+      <div class="summary-card">
+        <span class="label">Debit Total</span>
+        <strong>{{ tb.totalDebitBalance | number: '1.2-2' }}</strong>
+      </div>
+
+      <div class="summary-card">
+        <span class="label">Credit Total</span>
+        <strong>{{ tb.totalCreditBalance | number: '1.2-2' }}</strong>
+      </div>
+
+      <div class="summary-card">
+        <span class="label">Status</span>
+        <strong [class.good]="tb.balanced" [class.bad]="!tb.balanced">
+          {{ tb.balanced ? 'Balanced' : 'Not Balanced' }}
+        </strong>
+      </div>
+    </section>
+
+    <section>
+      <h2>Unadjusted Trial Balance</h2>
+
+      @if (tb.lines.length === 0) {
+        <p class="empty">No posted standard journal entry activity found for this fiscal year.</p>
+      } @else {
+        <table>
+          <thead>
+            <tr>
+              <th>Account</th>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Normal Balance</th>
+              <th class="amount">Total Debits</th>
+              <th class="amount">Total Credits</th>
+              <th class="amount">Debit Balance</th>
+              <th class="amount">Credit Balance</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (line of tb.lines; track line.accountId) {
+              <tr>
+                <td>{{ line.accountCode }}</td>
+                <td>{{ line.accountName }}</td>
+                <td>{{ line.accountType }}</td>
+                <td>{{ line.normalBalance }}</td>
+                <td class="amount">{{ line.totalDebits | number: '1.2-2' }}</td>
+                <td class="amount">{{ line.totalCredits | number: '1.2-2' }}</td>
+                <td class="amount">{{ line.debitBalance | number: '1.2-2' }}</td>
+                <td class="amount">{{ line.creditBalance | number: '1.2-2' }}</td>
+              </tr>
+            }
+          </tbody>
+          <tfoot>
+            <tr>
+              <th colspan="6">Totals</th>
+              <th class="amount">{{ tb.totalDebitBalance | number: '1.2-2' }}</th>
+              <th class="amount">{{ tb.totalCreditBalance | number: '1.2-2' }}</th>
+            </tr>
+          </tfoot>
+        </table>
+      }
+    </section>
+  }
+</section>
