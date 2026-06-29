@@ -1,0 +1,33 @@
+<section class="context-card">
+  <h2>Ledger Context</h2>
+
+  @if (error()) {
+    <div class="error">{{ error() }}</div>
+  }
+
+  <div class="fields">
+    <label>
+      Accounting Entity
+      <select [formControl]="accountingEntityControl">
+        <option value="">Select accounting entity</option>
+
+        @for (entity of accountingEntities(); track entity.id) {
+          <option [value]="entity.id">{{ entity.name }}</option>
+        }
+      </select>
+    </label>
+
+    <label>
+      Fiscal Year
+      <select [formControl]="fiscalYearControl">
+        <option value="">Select fiscal year</option>
+
+        @for (fiscalYear of fiscalYears(); track fiscalYear.id) {
+          <option [value]="fiscalYear.id">
+            {{ fiscalYear.year }} — {{ fiscalYear.startDate }} to {{ fiscalYear.endDate }}
+          </option>
+        }
+      </select>
+    </label>
+  </div>
+</section>

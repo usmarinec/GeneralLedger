@@ -1,0 +1,171 @@
+<section class="dashboard">
+  <header class="dashboard-header">
+    <div>
+      <h1>Dashboard</h1>
+      <p>Overview of the current ledger workspace and first backend vertical slice.</p>
+    </div>
+
+    <button type="button" class="secondary" (click)="refresh()">Refresh</button>
+  </header>
+
+  @if (message()) {
+    <div class="alert success">{{ message() }}</div>
+  }
+
+  @if (error()) {
+    <div class="alert error">{{ error() }}</div>
+  }
+
+  <section class="context-summary">
+    <article class="summary-card">
+      <span class="label">Selected Accounting Entity</span>
+      <strong>{{ selectedAccountingEntity()?.name ?? 'None selected' }}</strong>
+    </article>
+
+    <article class="summary-card">
+      <span class="label">Selected Fiscal Year</span>
+      @if (selectedFiscalYear(); as fiscalYear) {
+        <strong>{{ fiscalYear.year }}</strong>
+        <small>{{ fiscalYear.startDate }} to {{ fiscalYear.endDate }}</small>
+      } @else {
+        <strong>None selected</strong>
+      }
+    </article>
+
+    <article class="summary-card">
+      <span class="label">Accounting Entities</span>
+      <strong>{{ accountingEntities().length }}</strong>
+    </article>
+
+    <article class="summary-card">
+      <span class="label">Accounts</span>
+      <strong>{{ accounts().length }}</strong>
+      <small>{{ activeAccountCount() }} active / {{ inactiveAccountCount() }} inactive</small>
+    </article>
+  </section>
+
+  <section class="grid">
+    <article class="card">
+      <div class="card-header">
+        <h2>Accounting Setup</h2>
+        <span class="status" [class.complete]="context.hasAccountingEntity()">
+          {{ context.hasAccountingEntity() ? 'Started' : 'Needed' }}
+        </span>
+      </div>
+
+      <p>Create and select the accounting entity that owns fiscal years, accounts, and journal entries.</p>
+
+      <a routerLink="/accounting-entities">Manage Accounting Entities</a>
+    </article>
+
+    <article class="card">
+      <div class="card-header">
+        <h2>Fiscal Year</h2>
+        <span class="status" [class.complete]="context.hasFiscalYear()">
+          {{ context.hasFiscalYear() ? 'Selected' : 'Needed' }}
+        </span>
+      </div>
+
+      <p>Create or select the fiscal year that journal entries and reports will use.</p>
+
+      <a routerLink="/fiscal-years">Manage Fiscal Years</a>
+    </article>
+
+    <article class="card">
+      <div class="card-header">
+        <h2>Chart of Accounts</h2>
+        <span class="status" [class.complete]="activeAccountCount() >= 2">
+          {{ activeAccountCount() >= 2 ? 'Ready' : 'Needs Accounts' }}
+        </span>
+      </div>
+
+      <p>Current selected entity has {{ activeAccountCount() }} active account(s).</p>
+
+      <a routerLink="/accounts">Manage Accounts</a>
+    </article>
+
+    <article class="card">
+      <div class="card-header">
+        <h2>Journal Entries</h2>
+        <span class="status" [class.complete]="postedJournalEntryCount() > 0">
+          {{ postedJournalEntryCount() > 0 ? 'Activity Posted' : 'No Posted Activity' }}
+        </span>
+      </div>
+
+      <p>
+        {{ journalEntries().length }} total journal entr{{ journalEntries().length === 1 ? 'y' : 'ies' }}
+        for the selected fiscal year.
+      </p>
+
+      <div class="mini-stats">
+        <span>Draft: {{ draftJournalEntryCount() }}</span>
+        <span>Posted: {{ postedJournalEntryCount() }}</span>
+        <span>Voided: {{ voidedJournalEntryCount() }}</span>
+      </div>
+
+      <a routerLink="/journal-entries">Manage Journal Entries</a>
+    </article>
+
+    <article class="card wide">
+      <div class="card-header">
+        <h2>Unadjusted Trial Balance</h2>
+        @if (trialBalance(); as tb) {
+          <span class="status" [class.complete]="tb.balanced" [class.danger]="!tb.balanced">
+            {{ tb.balanced ? 'Balanced' : 'Not Balanced' }}
+          </span>
+        } @else {
+          <span class="status">Not Generated</span>
+        }
+      </div>
+
+      <p>
+        Generate a quick preview of the unadjusted trial balance using posted STANDARD journal
+        entries for the selected accounting entity and fiscal year.
+      </p>
+
+      <div class="button-row">
+        <button
+          type="button"
+          [disabled]="!context.hasFullContext() || loading()"
+          (click)="generateTrialBalancePreview()"
+        >
+          {{ loading() ? 'Generating...' : 'Generate Preview' }}
+        </button>
+
+        <a routerLink="/trial-balances">Open Trial Balances</a>
+      </div>
+
+      @if (trialBalance(); as tb) {
+        <div class="trial-balance-preview">
+          <div>
+            <span class="label">Debit Total</span>
+            <strong>{{ tb.totalDebitBalance | number: '1.2-2' }}</strong>
+          </div>
+
+          <div>
+            <span class="label">Credit Total</span>
+            <strong>{{ tb.totalCreditBalance | number: '1.2-2' }}</strong>
+          </div>
+
+          <div>
+            <span class="label">Lines</span>
+            <strong>{{ tb.lines.length }}</strong>
+          </div>
+        </div>
+      }
+    </article>
+  </section>
+
+  <section class="next-steps">
+    <h2>Suggested Workflow</h2>
+
+    <ol>
+      <li>Create or select an accounting entity.</li>
+      <li>Create or select a fiscal year.</li>
+      <li>Create at least two accounts, such as Cash and Service Revenue.</li>
+      <li>Create a balanced STANDARD journal entry.</li>
+      <li>Post the journal entry.</li>
+      <li>Generate the unadjusted trial balance.</li>
+    </ol>
+  </section>
+</section>

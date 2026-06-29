@@ -1,0 +1,72 @@
+<div class="shell" [class.sidebar-collapsed]="sidebarCollapsed()">
+  <aside class="sidebar">
+    <div class="sidebar-top">
+      <div class="brand">
+        <div class="brand-mark">L</div>
+
+        <div class="brand-text">
+          <h1>Ledger</h1>
+          <p>General Ledger</p>
+        </div>
+      </div>
+
+      <button
+        type="button"
+        class="collapse-button"
+        [attr.aria-label]="sidebarCollapsed() ? 'Expand sidebar' : 'Collapse sidebar'"
+        [title]="sidebarCollapsed() ? 'Expand sidebar' : 'Collapse sidebar'"
+        (click)="toggleSidebar()"
+      >
+        <span aria-hidden="true">
+          {{ sidebarCollapsed() ? '›' : '‹' }}
+        </span>
+      </button>
+    </div>
+
+    <nav class="nav" aria-label="Main navigation">
+      <a
+        routerLink="/dashboard"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        title="Dashboard"
+      >
+        <span class="nav-icon">D</span>
+        <span class="nav-text">Dashboard</span>
+      </a>
+
+      <a
+        routerLink="/accounting-entities"
+        routerLinkActive="active"
+        title="Accounting Entities"
+      >
+        <span class="nav-icon">E</span>
+        <span class="nav-text">Accounting Entities</span>
+      </a>
+
+      <a routerLink="/fiscal-years" routerLinkActive="active" title="Fiscal Years">
+        <span class="nav-icon">FY</span>
+        <span class="nav-text">Fiscal Years</span>
+      </a>
+
+      <a routerLink="/accounts" routerLinkActive="active" title="Accounts">
+        <span class="nav-icon">A</span>
+        <span class="nav-text">Accounts</span>
+      </a>
+
+      <a routerLink="/journal-entries" routerLinkActive="active" title="Journal Entries">
+        <span class="nav-icon">JE</span>
+        <span class="nav-text">Journal Entries</span>
+      </a>
+
+      <a routerLink="/trial-balances" routerLinkActive="active" title="Trial Balances">
+        <span class="nav-icon">TB</span>
+        <span class="nav-text">Trial Balances</span>
+      </a>
+    </nav>
+  </aside>
+
+  <main class="main">
+    <app-ledger-context-selector></app-ledger-context-selector>
+    <router-outlet />
+  </main>
+</div>

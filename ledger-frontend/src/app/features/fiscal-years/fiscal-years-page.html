@@ -1,0 +1,102 @@
+<section class="page-card">
+  <header class="page-header">
+    <div>
+      <h1>Fiscal Years</h1>
+      <p>Create, select, and manage fiscal years for the selected accounting entity.</p>
+    </div>
+
+    <button type="button" class="secondary" [disabled]="!context.hasAccountingEntity()" (click)="refresh()">
+      Refresh
+    </button>
+  </header>
+
+  @if (message()) {
+    <div class="alert success">{{ message() }}</div>
+  }
+
+  @if (error()) {
+    <div class="alert error">{{ error() }}</div>
+  }
+
+  @if (!context.hasAccountingEntity()) {
+    <p class="empty">Select an accounting entity before managing fiscal years.</p>
+  } @else {
+    <section class="form-section">
+      <h2>{{ editingFiscalYearId() ? 'Edit Fiscal Year' : 'Create Fiscal Year' }}</h2>
+
+      <form [formGroup]="fiscalYearForm" (ngSubmit)="saveFiscalYear()">
+        <label>
+          Year
+          <input type="number" formControlName="year" />
+        </label>
+
+        <label>
+          Start Date
+          <input type="date" formControlName="startDate" />
+        </label>
+
+        <label>
+          End Date
+          <input type="date" formControlName="endDate" />
+        </label>
+
+        @if (editingFiscalYearId()) {
+          <label class="checkbox-label">
+            <input type="checkbox" formControlName="closed" />
+            Closed
+          </label>
+        }
+
+        <div class="button-row">
+          <button type="submit" [disabled]="fiscalYearForm.invalid">
+            {{ editingFiscalYearId() ? 'Update Fiscal Year' : 'Create Fiscal Year' }}
+          </button>
+
+          @if (editingFiscalYearId()) {
+            <button type="button" class="secondary" (click)="cancelEdit()">Cancel</button>
+          }
+        </div>
+      </form>
+    </section>
+
+    <section>
+      <h2>Existing Fiscal Years</h2>
+
+      @if (fiscalYears().length === 0) {
+        <p class="empty">No fiscal years found for this accounting entity.</p>
+      } @else {
+        <table>
+          <thead>
+            <tr>
+              <th>Year</th>
+              <th>Start Date</th>
+              <th>End Date</th>
+              <th>Closed</th>
+              <th>Selected</th>
+              <th class="actions">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (fiscalYear of fiscalYears(); track fiscalYear.id) {
+              <tr>
+                <td>{{ fiscalYear.year }}</td>
+                <td>{{ fiscalYear.startDate }}</td>
+                <td>{{ fiscalYear.endDate }}</td>
+                <td>{{ fiscalYear.closed ? 'Yes' : 'No' }}</td>
+                <td>
+                  @if (context.selectedFiscalYearId() === fiscalYear.id) {
+                    <span class="badge">Selected</span>
+                  }
+                </td>
+                <td class="actions">
+                  <button type="button" (click)="selectFiscalYear(fiscalYear)">Select</button>
+                  <button type="button" class="secondary" (click)="startEdit(fiscalYear)">Edit</button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+    </section>
+  }
+</section>

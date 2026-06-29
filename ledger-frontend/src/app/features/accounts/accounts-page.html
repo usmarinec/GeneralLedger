@@ -1,0 +1,123 @@
+<section class="page-card">
+  <header class="page-header">
+    <div>
+      <h1>Accounts</h1>
+      <p>Create and maintain the chart of accounts for the selected accounting entity.</p>
+    </div>
+
+    <button type="button" class="secondary" [disabled]="!context.hasAccountingEntity()" (click)="refresh()">
+      Refresh
+    </button>
+  </header>
+
+  @if (message()) {
+    <div class="alert success">{{ message() }}</div>
+  }
+
+  @if (error()) {
+    <div class="alert error">{{ error() }}</div>
+  }
+
+  @if (!context.hasAccountingEntity()) {
+    <p class="empty">Select an accounting entity before managing accounts.</p>
+  } @else {
+    <section class="form-section">
+      <h2>{{ editingAccountId() ? 'Edit Account' : 'Create Account' }}</h2>
+
+      <form [formGroup]="accountForm" (ngSubmit)="saveAccount()">
+        <div class="form-grid">
+          <label>
+            Code
+            <input type="text" formControlName="code" placeholder="1000" />
+          </label>
+
+          <label>
+            Name
+            <input type="text" formControlName="name" placeholder="Cash" />
+          </label>
+
+          <label>
+            Account Type
+            <select formControlName="accountType">
+              @for (type of accountTypes; track type) {
+                <option [value]="type">{{ type }}</option>
+              }
+            </select>
+          </label>
+
+          <label>
+            Normal Balance
+            <select formControlName="normalBalance">
+              @for (balance of normalBalances; track balance) {
+                <option [value]="balance">{{ balance }}</option>
+              }
+            </select>
+          </label>
+
+          <label>
+            Classification
+            <select formControlName="classification">
+              @for (classification of classifications; track classification) {
+                <option [value]="classification">{{ classification }}</option>
+              }
+            </select>
+          </label>
+
+          @if (editingAccountId()) {
+            <label class="checkbox-label">
+              <input type="checkbox" formControlName="active" />
+              Active
+            </label>
+          }
+        </div>
+
+        <div class="button-row">
+          <button type="submit" [disabled]="accountForm.invalid">
+            {{ editingAccountId() ? 'Update Account' : 'Create Account' }}
+          </button>
+
+          @if (editingAccountId()) {
+            <button type="button" class="secondary" (click)="cancelEdit()">Cancel</button>
+          }
+        </div>
+      </form>
+    </section>
+
+    <section>
+      <h2>Chart of Accounts</h2>
+
+      @if (accounts().length === 0) {
+        <p class="empty">No accounts found for this accounting entity.</p>
+      } @else {
+        <table>
+          <thead>
+            <tr>
+              <th>Code</th>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Normal Balance</th>
+              <th>Classification</th>
+              <th>Active</th>
+              <th class="actions">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (account of accounts(); track account.id) {
+              <tr>
+                <td>{{ account.code }}</td>
+                <td>{{ account.name }}</td>
+                <td>{{ account.accountType }}</td>
+                <td>{{ account.normalBalance }}</td>
+                <td>{{ account.classification }}</td>
+                <td>{{ account.active ? 'Yes' : 'No' }}</td>
+                <td class="actions">
+                  <button type="button" class="secondary" (click)="startEdit(account)">Edit</button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+    </section>
+  }
+</section>
