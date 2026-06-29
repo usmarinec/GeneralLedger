@@ -8,10 +8,7 @@
   <div class="fields">
     <label>
       Accounting Entity
-      <select
-        [value]="context.selectedAccountingEntityId() ?? ''"
-        (change)="onAccountingEntityChange($any($event.target).value)"
-      >
+      <select [formControl]="accountingEntityControl">
         <option value="">Select accounting entity</option>
 
         @for (entity of accountingEntities(); track entity.id) {
@@ -22,11 +19,7 @@
 
     <label>
       Fiscal Year
-      <select
-        [value]="context.selectedFiscalYearId() ?? ''"
-        [disabled]="!context.selectedAccountingEntityId()"
-        (change)="onFiscalYearChange($any($event.target).value)"
-      >
+      <select [formControl]="fiscalYearControl">
         <option value="">Select fiscal year</option>
 
         @for (fiscalYear of fiscalYears(); track fiscalYear.id) {
